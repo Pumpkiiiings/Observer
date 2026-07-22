@@ -1,0 +1,26 @@
+id: lobby
+
+components:
+  title:
+    type: TEXT
+    alignment: TOP_LEFT
+    offset_x: 10
+    offset_y: 10
+    scale: 4.0
+    content: "<aqua><bold>MISTAKEN"
+
+  players:
+    type: TEXT
+    alignment: TOP_LEFT
+    offset_x: 10
+    offset_y: 35
+    scale: 1.0
+    content: "&fPlayers: &a%server_online%"
+
+  player_name:
+    type: TEXT
+    alignment: BOTTOM_RIGHT
+    offset_x: -10
+    offset_y: -20
+    scale: 1.0
+    content: "&7Playing as &f%player_name%"

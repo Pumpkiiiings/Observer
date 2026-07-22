@@ -1,0 +1,9 @@
+name: ObserverExample
+version: '${version}'
+main: com.observer.example.ObserverExamplePlugin
+api-version: '1.21'
+depend: [ObserverPaper]
+commands:
+  scareme:
+    description: Jump scare command using Observer APIs
+    usage: /scareme

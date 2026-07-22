@@ -1,0 +1,7 @@
+# Observer Configuration
+
+debug:
+  # Massive debug logging for keyboard detection. Logs every packet sent and received.
+  keyboard: true
+  # Toggles STAGE-1 and STAGE-2 debug logging for the environment system
+  environment: false

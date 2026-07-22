@@ -1,0 +1,54 @@
+package com.observer.fabric.mixin;
+
+import com.observer.fabric.client.ObserverClient;
+import com.observer.fabric.environment.EnvironmentState;
+import net.minecraft.client.renderer.FogRenderer;
+import org.joml.Vector4f;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
+/**
+ * Mixin for fog color and density override.
+ *
+ * Pipeline stage logged here:
+ *   [STAGE-6] Fog renderer modified — intercepting the UBO buffer write.
+ *
+ * MC 1.21.10 BREAKING CHANGE:
+ *   RenderSystem.setShaderFog* no longer exists. Fog is now uploaded to the GPU
+ *   via a Uniform Buffer Object (UBO) in FogRenderer.updateBuffer(...).
+ *   We intercept the calls to updateBuffer to overwrite the color and distances
+ *   right before they are written to the ByteBuffer.
+ *
+ * KNOWN CONFLICTS:
+ *   - Iris shaders: Bypass this pipeline entirely.
+ *   - Sodium: Partially replaces fog rendering, but usually respects the vanilla UBO.
+ */
+@Mixin(FogRenderer.class)
+public abstract class FogRendererMixin {
+
+    @ModifyArgs(
+            method = "setupFog",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;updateBuffer(Ljava/nio/ByteBuffer;ILorg/joml/Vector4f;FFFFFF)V"),
+            require = 0
+    )
+    private void onUpdateFogBuffer(Args args) {
+        // Arg 2 is the color (org.joml.Vector4f)
+        if (EnvironmentState.hasFogOverride) {
+            Vector4f color = args.get(2);
+            color.set(
+                    EnvironmentState.fogR / 255.0f,
+                    EnvironmentState.fogG / 255.0f,
+                    EnvironmentState.fogB / 255.0f,
+                    color.w
+            );
+        }
+
+        // Arg 3 is fogStart (float), Arg 4 is fogEnd (float)
+        if (EnvironmentState.denseFogEnabled) {
+            args.set(3, EnvironmentState.fogStart);
+            args.set(4, EnvironmentState.fogEnd);
+        }
+    }
+}

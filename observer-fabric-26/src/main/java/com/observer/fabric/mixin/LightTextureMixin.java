@@ -1,0 +1,24 @@
+package com.observer.fabric.mixin;
+
+import com.observer.fabric.environment.EnvironmentState;
+import net.minecraft.client.renderer.Lightmap;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+@Mixin(Lightmap.class)
+public abstract class LightTextureMixin {
+
+    // Overrides the lightmap texture colors when True Darkness is enabled
+    // Note: The specific injection point and method depends heavily on Mojmap version.
+    // In 1.21.1, getBrightness might be useful, or we can just apply a darkness multiplier.
+    
+    @ModifyVariable(method = "render", at = @At("STORE"), ordinal = 0, require = 0)
+    private float modifyLightmap(float original) {
+        if (EnvironmentState.trueDarknessEnabled) {
+            // Force light multiplier to 0 for true darkness
+            return 0.0f;
+        }
+        return original;
+    }
+}

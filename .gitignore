@@ -1,0 +1,45 @@
+# Gradle
+.gradle/
+.gradle_home/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.eclipse/
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.classpath
+.project
+
+# Fabric / Loom
+.loom/
+run/
+.fabric/
+
+# Paper / Bukkit
+server/
+plugins/
+world/
+world_nether/
+world_the_end/
+logs/
+crash-reports/
+eula.txt
+
+# Extras
+.DS_Store
+*.log
+temp_api/
+net/

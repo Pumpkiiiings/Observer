@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "observer",
+  "version": "1.0.1",
+  "name": "Observer",
+  "description": "Server-driven client experience extension.",
+  "authors": [
+    "Observer Team"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/observer/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.observer.fabric.ObserverFabric"
+    ],
+    "client": [
+      "com.observer.fabric.client.ObserverClient"
+    ]
+  },
+  "mixins": [
+    "observer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.10",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
