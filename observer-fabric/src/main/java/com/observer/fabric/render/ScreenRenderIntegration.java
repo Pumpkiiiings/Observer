@@ -23,15 +23,53 @@ public class ScreenRenderIntegration implements HudRenderCallback {
     }
 
     private int renderTicks = 0;
+    private static final java.util.Random SHAKE_RANDOM = new java.util.Random();
 
     @Override
     public void onHudRender(GuiGraphics drawContext, DeltaTracker tickCounter) {
+        // --- Screen Effects ---
+        com.mojang.blaze3d.vertex.PoseStack poseStack = drawContext.pose();
+
+        // Screenshake: offset the entire render matrix
+        if (com.observer.fabric.screen.ScreenEffectState.screenshakeActive) {
+            float intensity = com.observer.fabric.screen.ScreenEffectState.screenshakeIntensity;
+            float offsetX = (SHAKE_RANDOM.nextFloat() - 0.5f) * 2f * intensity * 8f;
+            float offsetY = (SHAKE_RANDOM.nextFloat() - 0.5f) * 2f * intensity * 8f;
+            poseStack.pushPose();
+            poseStack.translate(offsetX, offsetY, 0);
+        }
+
+        // Tint: draw a fullscreen color overlay with fading alpha
+        if (com.observer.fabric.screen.ScreenEffectState.tintActive) {
+            int r = com.observer.fabric.screen.ScreenEffectState.tintR;
+            int g = com.observer.fabric.screen.ScreenEffectState.tintG;
+            int b = com.observer.fabric.screen.ScreenEffectState.tintB;
+            float baseAlpha = com.observer.fabric.screen.ScreenEffectState.tintAlpha;
+            int remaining = com.observer.fabric.screen.ScreenEffectState.tintTicksRemaining;
+            int total = com.observer.fabric.screen.ScreenEffectState.tintTotalTicks;
+
+            // Fade out during the last 25% of the duration
+            float fadeProgress = total > 0 ? (float) remaining / total : 1f;
+            float alpha = fadeProgress < 0.25f ? baseAlpha * (fadeProgress / 0.25f) : baseAlpha;
+
+            int screenWidth = drawContext.guiWidth();
+            int screenHeight = drawContext.guiHeight();
+            int color = ((int)(alpha * 255) << 24) | (r << 16) | (g << 8) | b;
+            drawContext.fill(0, 0, screenWidth, screenHeight, color);
+        }
+
+        // --- HUD Components ---
         if (com.observer.fabric.config.ObserverConfig.DEBUG_MODE && renderTicks++ % 60 == 0) {
             com.observer.fabric.ObserverFabric.LOGGER.info("[Observer] Render tick");
             com.observer.fabric.ObserverFabric.LOGGER.info("[Observer] Active components: {}", ComponentManager.getActiveComponents().size());
         }
         for (ObserverComponent component : ComponentManager.getActiveComponents()) {
             component.render(drawContext, tickCounter);
+        }
+
+        // Pop the screenshake matrix if it was pushed
+        if (com.observer.fabric.screen.ScreenEffectState.screenshakeActive) {
+            poseStack.popPose();
         }
     }
 }

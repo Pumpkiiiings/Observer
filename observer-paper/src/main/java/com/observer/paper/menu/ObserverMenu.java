@@ -24,7 +24,7 @@ public abstract class ObserverMenu {
         MenuOpenPayload payload = new MenuOpenPayload(menuId, builder.build());
         ObserverPaper.getInstance().getNetworkManager().sendPayload(
                 player,
-                com.observer.api.ObserverChannels.MENU_OPEN.toString(),
+                com.observer.api.ObserverChannels.channel(com.observer.api.ObserverChannels.MENU_OPEN),
                 payload,
                 MenuOpenPayload.CODEC
         );

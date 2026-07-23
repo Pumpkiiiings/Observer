@@ -1,4 +1,4 @@
-package com.observer.fabric.network.handler;
+package com.observer.fabric.network.handler; import net.minecraft.resources.Identifier;
 
 import com.observer.api.model.ComponentType;
 import com.observer.api.payload.component.ComponentCreatePayload;
@@ -20,7 +20,7 @@ public final class ComponentPayloadHandler {
 
     public static void handleCreate(ComponentCreatePayload payload, ClientPlayNetworking.Context context) {
         ObserverClient.LOGGER.info("[Observer] Received ComponentCreatePayload id={} type={} alignment={}",
-                payload.id(), payload.componentType(), payload.alignment());
+                Identifier.tryParse(payload.id()), payload.componentType(), payload.alignment());
         ObserverClient.LOGGER.info("[Observer-Debug] Received scale={}", payload.scale());
         context.client().execute(() -> {
             if (payload.componentType() == ComponentType.TEXT) {
@@ -34,8 +34,8 @@ public final class ComponentPayloadHandler {
                             payload.textAlignment(),
                             payload.backgroundColor()
                     );
-                    ComponentManager.addComponent(payload.id(), component);
-                    ObserverClient.LOGGER.info("[Observer] Component stored: {}", payload.id());
+                    ComponentManager.addComponent(Identifier.tryParse(payload.id()), component);
+                    ObserverClient.LOGGER.info("[Observer] Component stored: {}", Identifier.tryParse(payload.id()));
                 });
             } else if (payload.componentType() == ComponentType.ITEM) {
                 payload.item().ifPresent(descriptor -> {
@@ -51,8 +51,8 @@ public final class ComponentPayloadHandler {
                                     payload.scale(),
                                     stack
                             );
-                            ComponentManager.addComponent(payload.id(), component);
-                            ObserverClient.LOGGER.info("[Observer] ITEM Component stored: {}", payload.id());
+                            ComponentManager.addComponent(Identifier.tryParse(payload.id()), component);
+                            ObserverClient.LOGGER.info("[Observer] ITEM Component stored: {}", Identifier.tryParse(payload.id()));
                         } else {
                             ObserverClient.LOGGER.warn("[Observer] ITEM Component material not found: {}", descriptor.material());
                         }
@@ -64,27 +64,27 @@ public final class ComponentPayloadHandler {
 
     public static void handleRemove(ComponentRemovePayload payload, ClientPlayNetworking.Context context) {
         context.client().execute(() -> {
-            ComponentManager.removeComponent(payload.id());
-            ObserverClient.LOGGER.info("Removed component: {}", payload.id());
+            ComponentManager.removeComponent(Identifier.tryParse(payload.id()));
+            ObserverClient.LOGGER.info("Removed component: {}", Identifier.tryParse(payload.id()));
         });
     }
 
     public static void handleUpdateText(UpdateTextContentPayload payload, ClientPlayNetworking.Context context) {
         context.client().execute(() -> {
-            ObserverComponent component = ComponentManager.getComponent(payload.id());
+            ObserverComponent component = ComponentManager.getComponent(Identifier.tryParse(payload.id()));
             if (component instanceof TextComponent textComponent) {
                 textComponent.setText(payload.text());
-                ObserverClient.LOGGER.info("Updated text for component: {}", payload.id());
+                ObserverClient.LOGGER.info("Updated text for component: {}", Identifier.tryParse(payload.id()));
             }
         });
     }
 
     public static void handleUpdatePosition(UpdatePositionPayload payload, ClientPlayNetworking.Context context) {
         context.client().execute(() -> {
-            ObserverComponent component = ComponentManager.getComponent(payload.id());
+            ObserverComponent component = ComponentManager.getComponent(Identifier.tryParse(payload.id()));
             if (component != null) {
                 component.setPosition(payload.x(), payload.y());
-                ObserverClient.LOGGER.info("Updated position for component: {}", payload.id());
+                ObserverClient.LOGGER.info("Updated position for component: {}", Identifier.tryParse(payload.id()));
             }
         });
     }

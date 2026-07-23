@@ -9,7 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.Identifier;
+
 
 import java.util.Optional;
 
@@ -27,7 +27,7 @@ import java.util.Optional;
  * This codec is implemented manually to support 7 fields.
  */
     public record ComponentCreatePayload(
-        Identifier id,
+        String id,
         ComponentType componentType,
         ComponentAlignment alignment,
         int offsetX,
@@ -40,13 +40,13 @@ import java.util.Optional;
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<ComponentCreatePayload> TYPE =
-            new CustomPacketPayload.Type<>(ObserverChannels.COMPONENT_CREATE);
+            ObserverChannels.createType(ObserverChannels.COMPONENT_CREATE);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ComponentCreatePayload> CODEC =
             new StreamCodec<>() {
                 @Override
                 public ComponentCreatePayload decode(RegistryFriendlyByteBuf buf) {
-                    Identifier id = Identifier.STREAM_CODEC.decode(buf);
+                    String id = ByteBufCodecs.STRING_UTF8.decode(buf);
                     ComponentType type = ComponentType.values()[ByteBufCodecs.INT.decode(buf)];
                     ComponentAlignment alignment = ComponentAlignment.values()[ByteBufCodecs.INT.decode(buf)];
                     int offsetX = ByteBufCodecs.INT.decode(buf);
@@ -62,7 +62,7 @@ import java.util.Optional;
 
                 @Override
                 public void encode(RegistryFriendlyByteBuf buf, ComponentCreatePayload payload) {
-                    Identifier.STREAM_CODEC.encode(buf, payload.id());
+                    ByteBufCodecs.STRING_UTF8.encode(buf, payload.id());
                     ByteBufCodecs.INT.encode(buf, payload.componentType().ordinal());
                     ByteBufCodecs.INT.encode(buf, payload.alignment().ordinal());
                     ByteBufCodecs.INT.encode(buf, payload.offsetX());

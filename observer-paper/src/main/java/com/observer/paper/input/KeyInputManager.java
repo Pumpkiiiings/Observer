@@ -28,9 +28,9 @@ public class KeyInputManager {
     public void register() {
         Bukkit.getMessenger().registerIncomingPluginChannel(
                 plugin,
-                ObserverChannels.OBSERVER_EVENT.toString(),
+                ObserverChannels.channel(ObserverChannels.OBSERVER_EVENT),
                 (channel, player, message) -> {
-                    if (!channel.equals(ObserverChannels.OBSERVER_EVENT.toString())) return;
+                    if (!channel.equals(ObserverChannels.channel(ObserverChannels.OBSERVER_EVENT))) return;
 
                     try {
                         // Decode the payload

@@ -26,7 +26,7 @@ public record KeyEventPayload(
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<KeyEventPayload> TYPE =
-            new CustomPacketPayload.Type<>(ObserverChannels.OBSERVER_EVENT);
+            ObserverChannels.createType(ObserverChannels.OBSERVER_EVENT);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, KeyEventPayload> CODEC =
             new StreamCodec<>() {

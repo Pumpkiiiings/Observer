@@ -4,7 +4,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+
 
 public record EnvironmentUpdatePayload(
         EnvironmentUpdateType updateType,
@@ -17,7 +17,7 @@ public record EnvironmentUpdatePayload(
         float alpha
 ) implements CustomPacketPayload {
 
-    public static final Type<EnvironmentUpdatePayload> TYPE = new Type<>(com.observer.api.ObserverChannels.ENVIRONMENT_UPDATE);
+    public static final Type<EnvironmentUpdatePayload> TYPE = com.observer.api.ObserverChannels.createType(com.observer.api.ObserverChannels.ENVIRONMENT_UPDATE);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EnvironmentUpdatePayload> CODEC = StreamCodec.of(
         (buf, payload) -> {

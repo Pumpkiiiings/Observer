@@ -11,7 +11,7 @@ import java.util.List;
 
 public record MenuOpenPayload(String menuId, List<MenuComponent> components) implements CustomPacketPayload {
 
-    public static final Type<MenuOpenPayload> TYPE = new Type<>(ObserverChannels.MENU_OPEN);
+    public static final Type<MenuOpenPayload> TYPE = ObserverChannels.createType(ObserverChannels.MENU_OPEN);
 
     public static final StreamCodec<FriendlyByteBuf, MenuOpenPayload> CODEC = StreamCodec.ofMember(
             MenuOpenPayload::write,

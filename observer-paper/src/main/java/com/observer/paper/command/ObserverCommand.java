@@ -443,6 +443,53 @@ public class ObserverCommand {
                         (p, r, g, b) -> ObserverAPI.setMoonColor(p, r, g, b),
                         (p) -> ObserverAPI.resetMoonColor(p)))
                 )
+            )
+
+            // /observer effect <targets> shake|tint ...
+            .then(Commands.literal("effect")
+                .then(Commands.argument("targets", ArgumentTypes.players())
+                    .then(Commands.literal("shake")
+                        .then(Commands.argument("intensity", FloatArgumentType.floatArg(0.0f))
+                            .then(Commands.argument("duration", IntegerArgumentType.integer(1))
+                                .executes(ctx -> {
+                                    List<Player> targets = ctx.getArgument("targets", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource());
+                                    float intensity = FloatArgumentType.getFloat(ctx, "intensity");
+                                    int duration = IntegerArgumentType.getInteger(ctx, "duration");
+                                    for (Player target : targets) {
+                                        com.observer.paper.api.PaperObserverScreenAPI.playScreenshake(target, intensity, duration);
+                                    }
+                                    ctx.getSource().getSender().sendMessage("§a[Observer] Played screenshake on " + targets.size() + " players.");
+                                    return 1;
+                                })
+                            )
+                        )
+                    )
+                    .then(Commands.literal("tint")
+                        .then(Commands.argument("r", IntegerArgumentType.integer(0, 255))
+                            .then(Commands.argument("g", IntegerArgumentType.integer(0, 255))
+                                .then(Commands.argument("b", IntegerArgumentType.integer(0, 255))
+                                    .then(Commands.argument("alpha", FloatArgumentType.floatArg(0.0f, 1.0f))
+                                        .then(Commands.argument("duration", IntegerArgumentType.integer(1))
+                                            .executes(ctx -> {
+                                                List<Player> targets = ctx.getArgument("targets", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource());
+                                                int r = IntegerArgumentType.getInteger(ctx, "r");
+                                                int g = IntegerArgumentType.getInteger(ctx, "g");
+                                                int b = IntegerArgumentType.getInteger(ctx, "b");
+                                                float alpha = FloatArgumentType.getFloat(ctx, "alpha");
+                                                int duration = IntegerArgumentType.getInteger(ctx, "duration");
+                                                for (Player target : targets) {
+                                                    com.observer.paper.api.PaperObserverScreenAPI.playScreenTint(target, r, g, b, alpha, duration);
+                                                }
+                                                ctx.getSource().getSender().sendMessage("§a[Observer] Played screen tint on " + targets.size() + " players.");
+                                                return 1;
+                                            })
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
             );
     }
 

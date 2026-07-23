@@ -11,7 +11,7 @@ import java.util.Set;
 
 public record KeysUpdatePayload(Set<Byte> pressedKeys) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<KeysUpdatePayload> TYPE = new CustomPacketPayload.Type<>(ObserverChannels.OBSERVER_KEYS_UPDATE);
+    public static final CustomPacketPayload.Type<KeysUpdatePayload> TYPE = ObserverChannels.createType(ObserverChannels.OBSERVER_KEYS_UPDATE);
 
     public static final StreamCodec<FriendlyByteBuf, KeysUpdatePayload> CODEC = StreamCodec.of(
             (buf, payload) -> {

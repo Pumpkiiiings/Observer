@@ -7,13 +7,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.EnumSet;
 
 public record HandshakePayload(int protocolVersion, String observerVersion, EnumSet<ObserverFeature> features) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<HandshakePayload> TYPE = new CustomPacketPayload.Type<>(ObserverChannels.HANDSHAKE);
+    public static final CustomPacketPayload.Type<HandshakePayload> TYPE = ObserverChannels.createType(ObserverChannels.HANDSHAKE);
 
     private static final StreamCodec<ByteBuf, EnumSet<ObserverFeature>> FEATURES_CODEC = ByteBufCodecs.INT
             .map(

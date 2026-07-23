@@ -70,9 +70,21 @@ public class ObserverClient implements ClientModInitializer {
             
             ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.environment.EnvironmentUpdatePayload.TYPE, EnvironmentPayloadHandler::handle);
             
+            // Screen Effects
+            ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.screen.ScreenEffectPayload.TYPE, com.observer.fabric.network.handler.ScreenEffectPayloadHandler::handle);
+            
             LOGGER.info("PayloadReceiverManager and KeyboardTrackerClient registration complete.");
         } catch (Exception e) {
             LOGGER.error("Failed during PayloadReceiverManager initialization", e);
+        }
+
+        // Register client tick for screen effects countdown
+        try {
+            net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(client -> {
+                com.observer.fabric.screen.ScreenEffectState.tick();
+            });
+        } catch (Exception e) {
+            LOGGER.error("Failed during ScreenEffectState tick registration", e);
         }
 
         try {

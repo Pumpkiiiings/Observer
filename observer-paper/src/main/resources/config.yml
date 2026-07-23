@@ -5,3 +5,7 @@ debug:
   keyboard: true
   # Toggles STAGE-1 and STAGE-2 debug logging for the environment system
   environment: false
+  # Toggles [DEBUG-SERVER] network packet logging (bytes sent per channel)
+  network: false
+  # Toggles screen effect debug logging
+  screen-effects: false

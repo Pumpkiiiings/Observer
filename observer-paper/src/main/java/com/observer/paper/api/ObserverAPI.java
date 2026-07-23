@@ -8,8 +8,8 @@ import com.observer.api.payload.component.update.UpdateTextContentPayload;
 import com.observer.paper.ObserverPaper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.minecraft.resources.Identifier;
+ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import io.papermc.paper.adventure.PaperAdventure;
 
@@ -72,10 +72,10 @@ public final class ObserverAPI {
                                   ComponentAlignment alignment, int offsetX, int offsetY, float scale, com.observer.api.model.TextAlignment textAlignment, Optional<Integer> backgroundColor) {
         if (!isObserverPlayer(player)) return;
 
-        Identifier identifier = Identifier.parse(id);
+        
 
         ComponentCreatePayload payload = new ComponentCreatePayload(
-                identifier,
+                id,
                 ComponentType.TEXT,
                 alignment,
                 offsetX,
@@ -91,18 +91,15 @@ public final class ObserverAPI {
         send(player, payload.type().id().toString(), payload, ComponentCreatePayload.CODEC);
     }
 
-    /**
-     * Creates an item component on the player's HUD.
-     */
     public static void createItem(Player player, String id, String material, int amount,
                                   ComponentAlignment alignment, int offsetX, int offsetY, float scale, com.observer.api.model.TextAlignment textAlignment) {
         if (!isObserverPlayer(player)) return;
 
-        Identifier identifier = Identifier.parse(id);
+        
         com.observer.api.payload.component.ItemDescriptor descriptor = new com.observer.api.payload.component.ItemDescriptor(material, amount);
 
         ComponentCreatePayload payload = new ComponentCreatePayload(
-                identifier,
+                id,
                 ComponentType.ITEM,
                 alignment,
                 offsetX,
@@ -117,30 +114,25 @@ public final class ObserverAPI {
         send(player, payload.type().id().toString(), payload, ComponentCreatePayload.CODEC);
     }
 
-    /**
-     * Updates only the text content of an existing component.
-     * No component is recreated — the client updates in place with no flicker.
-     */
     public static void updateText(Player player, String id, String textContent) {
         if (!isObserverPlayer(player)) return;
 
-        Identifier identifier = Identifier.parse(id);
+        
 
         UpdateTextContentPayload payload = new UpdateTextContentPayload(
-                identifier,
+                id,
                 convertText(textContent)
         );
 
         send(player, payload.type().id().toString(), payload, UpdateTextContentPayload.CODEC);
     }
 
-    /** Removes a component from the player's HUD. */
     public static void removeComponent(Player player, String id) {
         if (!isObserverPlayer(player)) return;
 
-        Identifier identifier = Identifier.parse(id);
+        
 
-        ComponentRemovePayload payload = new ComponentRemovePayload(identifier);
+        ComponentRemovePayload payload = new ComponentRemovePayload(id);
 
         send(player, payload.type().id().toString(), payload, ComponentRemovePayload.CODEC);
     }

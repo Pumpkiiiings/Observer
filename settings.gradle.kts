@@ -8,4 +8,4 @@ pluginManagement {
 }
 
 rootProject.name = "Observer"
-include("observer-api", "observer-client-api", "observer-fabric-26")
+include("observer-api", "observer-client-api", "observer-fabric-26", "observer-paper")

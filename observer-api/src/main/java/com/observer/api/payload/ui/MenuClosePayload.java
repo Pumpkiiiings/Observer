@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record MenuClosePayload(String menuId) implements CustomPacketPayload {
 
-    public static final Type<MenuClosePayload> TYPE = new Type<>(ObserverChannels.MENU_CLOSE);
+    public static final Type<MenuClosePayload> TYPE = ObserverChannels.createType(ObserverChannels.MENU_CLOSE);
 
     public static final StreamCodec<FriendlyByteBuf, MenuClosePayload> CODEC = StreamCodec.ofMember(
             MenuClosePayload::write,

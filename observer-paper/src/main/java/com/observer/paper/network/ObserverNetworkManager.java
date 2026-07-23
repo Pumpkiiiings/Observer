@@ -30,21 +30,22 @@ public class ObserverNetworkManager implements PluginMessageListener {
         this.plugin = plugin;
         this.playerManager = playerManager;
 
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.HANDSHAKE.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.COMPONENT_CREATE.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.COMPONENT_REMOVE.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.UPDATE_TEXT_CONTENT.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.UPDATE_POSITION.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.ENVIRONMENT_UPDATE.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.CLEAR_HUD.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.MENU_OPEN.toString());
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.OBSERVER_KEYS_SYNC.toString());
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.HANDSHAKE));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.COMPONENT_CREATE));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.COMPONENT_REMOVE));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.UPDATE_TEXT_CONTENT));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.UPDATE_POSITION));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.ENVIRONMENT_UPDATE));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.CLEAR_HUD));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_OPEN));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.OBSERVER_KEYS_SYNC));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.SCREEN_EFFECT));
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.HANDSHAKE.toString(), this);
-        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.MENU_ACTION.toString(), this);
-        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.MENU_CLOSE.toString(), this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.HANDSHAKE), this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_ACTION), this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_CLOSE), this);
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.OBSERVER_KEYS_UPDATE.toString(), this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.OBSERVER_KEYS_UPDATE), this);
     }
 
     public void sendHandshakeRequest(Player player) {
@@ -53,7 +54,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 ObserverProtocol.OBSERVER_VERSION,
                 EnumSet.noneOf(com.observer.api.ObserverFeature.class)
         );
-        sendPayload(player, ObserverChannels.HANDSHAKE.toString(), request, HandshakePayload.CODEC);
+        sendPayload(player, ObserverChannels.channel(ObserverChannels.HANDSHAKE), request, HandshakePayload.CODEC);
     }
 
     public <T extends CustomPacketPayload> void sendPayload(Player player, String channel, T payload, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
@@ -69,7 +70,9 @@ public class ObserverNetworkManager implements PluginMessageListener {
             byte[] bytes = new byte[buf.readableBytes()];
             buf.readBytes(bytes);
             
-            plugin.getLogger().info("[DEBUG-SERVER] Sending " + bytes.length + " bytes on channel " + channel + " to " + player.getName());
+            if (plugin.getConfig().getBoolean("debug.network", false)) {
+                plugin.getLogger().info("[DEBUG-SERVER] Sending " + bytes.length + " bytes on channel " + channel + " to " + player.getName());
+            }
             player.sendPluginMessage(plugin, channel, bytes);
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to send payload on channel " + channel);
@@ -79,7 +82,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        if (channel.equals(ObserverChannels.HANDSHAKE.toString())) {
+        if (channel.equals(ObserverChannels.channel(ObserverChannels.HANDSHAKE))) {
             try {
                 ByteBuf buf = Unpooled.wrappedBuffer(message);
                 MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
@@ -96,7 +99,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 plugin.getLogger().warning("Failed to decode handshake from " + player.getName());
                 e.printStackTrace();
             }
-        } else if (channel.equals(ObserverChannels.MENU_ACTION.toString())) {
+        } else if (channel.equals(ObserverChannels.channel(ObserverChannels.MENU_ACTION))) {
             try {
                 ByteBuf buf = Unpooled.wrappedBuffer(message);
                 MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
@@ -113,7 +116,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 plugin.getLogger().warning("Failed to decode MenuActionPayload from " + player.getName());
                 e.printStackTrace();
             }
-        } else if (channel.equals(ObserverChannels.MENU_CLOSE.toString())) {
+        } else if (channel.equals(ObserverChannels.channel(ObserverChannels.MENU_CLOSE))) {
             try {
                 ByteBuf buf = Unpooled.wrappedBuffer(message);
                 MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
@@ -130,7 +133,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 plugin.getLogger().warning("Failed to decode MenuClosePayload from " + player.getName());
                 e.printStackTrace();
             }
-        } else if (channel.equals(ObserverChannels.OBSERVER_KEYS_UPDATE.toString())) {
+        } else if (channel.equals(ObserverChannels.channel(ObserverChannels.OBSERVER_KEYS_UPDATE))) {
             try {
                 ByteBuf buf = Unpooled.wrappedBuffer(message);
                 MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();

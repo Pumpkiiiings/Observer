@@ -77,6 +77,9 @@ public class ObserverFabric implements ModInitializer {
 
             registerC2S(com.observer.api.payload.keys.KeysUpdatePayload.TYPE, com.observer.api.payload.keys.KeysUpdatePayload.CODEC);
 
+            // Screen Effects (Server -> Client)
+            registerS2C(com.observer.api.payload.screen.ScreenEffectPayload.TYPE, com.observer.api.payload.screen.ScreenEffectPayload.CODEC);
+
             LOGGER.info("[Observer] Payload registration success");
             LOGGER.info("[Observer] Codec registration successful");
         } catch (Throwable t) {
