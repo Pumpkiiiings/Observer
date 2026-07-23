@@ -15,6 +15,6 @@ allprojects {
     }
 
     tasks.withType<JavaCompile> {
-        options.release.set(25)
+        options.release.set(21)
     }
 }

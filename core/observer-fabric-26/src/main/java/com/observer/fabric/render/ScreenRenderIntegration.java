@@ -79,9 +79,5 @@ public class ScreenRenderIntegration implements HudElement {
             component.render(context, tickCounter);
         }
 
-        // Pop the screenshake matrix if it was pushed
-        if (com.observer.fabric.screen.ScreenEffectState.screenshakeActive) {
-            context.pose().popMatrix();
-        }
     }
 }

@@ -85,9 +85,5 @@ public class ScreenRenderIntegration implements HudRenderCallback {
             component.render(drawContext, tickCounter);
         }
 
-        // Pop the screenshake matrix if it was pushed
-        if (com.observer.fabric.screen.ScreenEffectState.screenshakeActive) {
-            poseStack.popPose();
-        }
     }
 }
