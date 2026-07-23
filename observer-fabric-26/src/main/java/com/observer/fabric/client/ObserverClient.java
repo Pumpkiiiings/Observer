@@ -25,9 +25,24 @@ public class ObserverClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // com.observer.fabric.keys.KeyManager.register();
+        String[] asciiArt = {
+            "§b                                                    ",
+            "§b  ▄▄▄▄▄   ▄▄                                        ",
+            "§b▄███████▄ ██                                        ",
+            "§b███   ███ ████▄ ▄█▀▀▀ ▄█▀█▄ ████▄ ██ ██ ▄█▀█▄ ████▄ ",
+            "§b███▄▄▄███ ██ ██ ▀███▄ ██▄█▀ ██ ▀▀ ██▄██ ██▄█▀ ██ ▀▀ ",
+            "§b ▀█████▀  ████▀ ▄▄▄█▀ ▀█▄▄▄ ██     ▀█▀  ▀█▄▄▄ ██    ",
+            "§b                                                    "
+        };
+        for (String line : asciiArt) {
+            LOGGER.info(line.replace("§b", "\u001B[36m") + "\u001B[0m");
+        }
+        
+        LOGGER.info("Initializing Observer Client...");
 
         LOGGER.info("Initializing Observer Fabric Client...");
+        
+        com.observer.fabric.animation.ObserverAnimationManager.initialize();
 
         try {
             LOGGER.info("[Observer-DEBUG] Checking mod compatibility...");
@@ -72,6 +87,9 @@ public class ObserverClient implements ClientModInitializer {
             
             // Screen Effects
             ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.screen.ScreenEffectPayload.TYPE, com.observer.fabric.network.handler.ScreenEffectPayloadHandler::handle);
+            
+            // Animations
+            ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.action.PlayAnimationPayload.TYPE, com.observer.fabric.network.handler.PlayAnimationHandler::handle);
             
             LOGGER.info("PayloadReceiverManager and KeyboardTrackerClient registration complete.");
         } catch (Exception e) {

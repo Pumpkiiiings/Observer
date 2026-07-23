@@ -9,6 +9,10 @@ java {
     withSourcesJar()
 }
 
+tasks.withType<JavaCompile> {
+    options.release.set(25)
+}
+
 repositories {
 
     maven(url = "https://api.modrinth.com/maven") {
@@ -22,11 +26,23 @@ repositories {
         name = "Architectury"
         url = uri("https://maven.architectury.dev/")
     }
+    maven {
+        name = "RedlanceMinecraft"
+        url = uri("https://repo.redlance.org/public")
+    }
 }
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     implementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    
+    // PlayerAnimator
+    implementation("com.zigythebird.playeranim:PlayerAnimationLibFabric:1.2.5+mc.26.1") {
+        attributes {
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+        }
+    }
+
     implementation(project(":observer-api"))
     include(project(":observer-api"))
     

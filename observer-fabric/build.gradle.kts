@@ -1,5 +1,12 @@
 plugins {
-    id("fabric-loom") version "1.11.7"
+    id("net.fabricmc.fabric-loom") version "1.15.5"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+    withSourcesJar()
 }
 
 repositories {
@@ -15,20 +22,23 @@ repositories {
         name = "Architectury"
         url = uri("https://maven.architectury.dev/")
     }
+    maven {
+        name = "RedlanceMinecraft"
+        url = uri("https://repo.redlance.org/public")
+    }
 }
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    implementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
     
+    // PlayerAnimator
+    modImplementation("com.zigythebird.playeranim:PlayerAnimationLibFabric:1.2.5+mc.26.1")
+
     implementation(project(":observer-api"))
     include(project(":observer-api"))
     
     implementation(project(":observer-client-api"))
     include(project(":observer-client-api"))
 
-    // UI Lib Fabric
-    modImplementation("com.daqem.uilib:uilib-fabric:9.0.0")
-    include("com.daqem.uilib:uilib-fabric:9.0.0")
 }

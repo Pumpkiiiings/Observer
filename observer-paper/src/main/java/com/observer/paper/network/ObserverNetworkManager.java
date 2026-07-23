@@ -81,6 +81,30 @@ public class ObserverNetworkManager implements PluginMessageListener {
         }
     }
 
+    public void broadcastAnimation(Player targetPlayer, String animationName) {
+        if (targetPlayer == null || animationName == null || animationName.isEmpty()) return;
+
+        com.observer.api.payload.action.PlayAnimationPayload payload = new com.observer.api.payload.action.PlayAnimationPayload(
+                targetPlayer.getUniqueId(),
+                animationName
+        );
+
+        MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
+        RegistryAccess registryAccess = server.registryAccess();
+        ByteBuf buf = Unpooled.buffer();
+        RegistryFriendlyByteBuf registryBuf = new RegistryFriendlyByteBuf(buf, registryAccess);
+        
+        com.observer.api.payload.action.PlayAnimationPayload.CODEC.encode(registryBuf, payload);
+        byte[] bytes = new byte[buf.readableBytes()];
+        buf.readBytes(bytes);
+
+        for (Player p : targetPlayer.getWorld().getPlayers()) {
+            if (playerManager.isObserver(p)) {
+                p.sendPluginMessage(plugin, ObserverChannels.channel(ObserverChannels.PLAY_ANIMATION), bytes);
+            }
+        }
+    }
+
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         if (channel.equals(ObserverChannels.channel(ObserverChannels.HANDSHAKE))) {

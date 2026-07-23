@@ -20,6 +20,7 @@ public final class ObserverChannels {
     public static final String OBSERVER_KEYS_UPDATE = "keys_update";
     public static final String SCREEN_EFFECT = "screen_effect";
     public static final String PLAYER_ACTION = "player_action";
+    public static final String PLAY_ANIMATION = "play_animation";
 
     private ObserverChannels() {}
 

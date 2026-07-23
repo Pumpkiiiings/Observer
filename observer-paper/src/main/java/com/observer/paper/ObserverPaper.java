@@ -25,6 +25,20 @@ public class ObserverPaper extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        
+        String[] asciiArt = {
+            "§b                                                    ",
+            "§b  ▄▄▄▄▄   ▄▄                                        ",
+            "§b▄███████▄ ██                                        ",
+            "§b███   ███ ████▄ ▄█▀▀▀ ▄█▀█▄ ████▄ ██ ██ ▄█▀█▄ ████▄ ",
+            "§b███▄▄▄███ ██ ██ ▀███▄ ██▄█▀ ██ ▀▀ ██▄██ ██▄█▀ ██ ▀▀ ",
+            "§b ▀█████▀  ████▀ ▄▄▄█▀ ▀█▄▄▄ ██     ▀█▀  ▀█▄▄▄ ██    ",
+            "§b                                                    "
+        };
+        for (String line : asciiArt) {
+            getServer().getConsoleSender().sendMessage(line);
+        }
+        
         saveDefaultConfig();
         this.soundManager = new com.observer.paper.audio.ObserverSoundManager(getLogger());
         this.environmentManager = new com.observer.paper.environment.ObserverEnvironmentManager(getLogger());

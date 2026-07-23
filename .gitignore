@@ -43,3 +43,8 @@ eula.txt
 *.log
 temp_api/
 net/
+
+# Custom additions
+gradle/wrapper/
+.vscode/
+docs/
