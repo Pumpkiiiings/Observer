@@ -2,8 +2,19 @@
 .gradle/
 .gradle_home/
 build/
+core/build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
+!**/src/main/**/build.properties
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Ignore Gradle cache
+.gradle/
+core/.gradle/
+
+# Ignore Gradle Daemon log
+core/daemon/
 
 # IDEs
 .idea/
