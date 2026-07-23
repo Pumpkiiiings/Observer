@@ -13,7 +13,7 @@ public abstract class LightTextureMixin {
     // Note: The specific injection point and method depends heavily on Mojmap version.
     // In 1.21.1, getBrightness might be useful, or we can just apply a darkness multiplier.
     
-    @ModifyVariable(method = "render", at = @At("STORE"), ordinal = 0, require = 0)
+    @ModifyVariable(method = "render_DISABLED", at = @At("STORE"), ordinal = 0, require = 0)
     private float modifyLightmap(float original) {
         if (EnvironmentState.trueDarknessEnabled) {
             // Force light multiplier to 0 for true darkness

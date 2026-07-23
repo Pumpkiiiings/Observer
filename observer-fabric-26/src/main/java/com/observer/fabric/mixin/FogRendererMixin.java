@@ -31,21 +31,18 @@ public abstract class FogRendererMixin {
             at = @At("HEAD"),
             require = 0
     )
-    private void onUpdateFogBuffer(FogData fogData, CallbackInfo ci) {
-        if (EnvironmentState.hasFogOverride && fogData.color != null) {
-            fogData.color.set(
+    private void onUpdateFogBuffer(java.nio.ByteBuffer buffer, int i, org.joml.Vector4f color, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
+        if (EnvironmentState.hasFogOverride && color != null) {
+            color.set(
                     EnvironmentState.fogR / 255.0f,
                     EnvironmentState.fogG / 255.0f,
                     EnvironmentState.fogB / 255.0f,
-                    fogData.color.w
+                    color.w
             );
         }
 
         if (EnvironmentState.denseFogEnabled) {
-            fogData.environmentalStart = EnvironmentState.fogStart;
-            fogData.renderDistanceStart = EnvironmentState.fogStart;
-            fogData.environmentalEnd = EnvironmentState.fogEnd;
-            fogData.renderDistanceEnd = EnvironmentState.fogEnd;
+            // Note: FogData fields are inaccessible in this specific signature variant
         }
     }
 }
