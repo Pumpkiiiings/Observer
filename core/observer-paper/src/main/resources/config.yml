@@ -9,3 +9,25 @@ debug:
   network: false
   # Toggles screen effect debug logging
   screen-effects: false
+
+updater:
+  enabled: true
+  
+  # Action to take when an ADMIN joins and there is a new plugin update available
+  notify-admins: true
+  
+  # Actions to take when a PLAYER joins with an outdated CLIENT MOD
+  on-outdated-client:
+    # Options: KICK, MESSAGE, NONE
+    action: "MESSAGE"
+    
+    # Message shown to the player when they are kicked (action = KICK)
+    # <version> is replaced with the required mod version
+    kick-message: "<red>¡Tu mod Observer está desactualizado!\nNecesitas la versión <version>."
+    
+    # Message sent in chat when they join (action = MESSAGE)
+    chat-message: "<gold>¡Tu mod Observer está desactualizado! Por favor actualiza a la v<version>."
+    
+    # Sound settings for MESSAGE action
+    play-sound: true
+    sound-name: "entity.experience_orb.pickup"

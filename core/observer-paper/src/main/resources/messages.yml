@@ -1,0 +1,66 @@
+prefix: "<dark_gray>[<gradient:#00ff88:#00b3ff>Observer</gradient><dark_gray>] "
+
+general:
+  only_players: "<red>Only players can run this command."
+  player_not_found: "<red>Player not found."
+  reload_success: "<prefix><green>All systems reloaded successfully."
+
+commands:
+  animation:
+    play: "<prefix><green>Playing animation <white><animation></white> on <white><player></white>"
+    
+  env:
+    test_dispatched: "<prefix><green>Dispatched environment test sequence."
+    updated: "<prefix><green>Environment updated for <white><count></white> players."
+    shake: "<prefix><green>Played screenshake on <white><count></white> players."
+    tint: "<prefix><green>Played screen tint on <white><count></white> players."
+    vignette: "<prefix><green>Played screen vignette on <white><count></white> players."
+
+  hud:
+    itemtest_success: "<prefix><green>Item test component spawned in the center of your screen."
+    parse:
+      original: "<gray>Original: <white><text></white>"
+      sanitized: "<gray>Sanitized: <white><text></white>"
+      minimessage: "<gray>MiniMessage: <white><text></white>"
+      json: "<gray>Component JSON: <white><text></white>"
+      preview: "<gray>Rendered Preview: <reset><component>"
+    text_success: "<prefix><green>Sent test component to HUD!"
+    clear_success: "<prefix><green>Cleared HUD for <white><count></white> players."
+    hide_success: "<prefix><green>Hidden layout <yellow><layout></yellow> from <white><count></white> players."
+    display_unknown: "<prefix><red>Unknown layout or save: <white><id></white>"
+    display_success: "<prefix><green>Displayed <yellow><id></yellow> to <white><count></white> players."
+
+  key:
+    stats_header: "<yellow>=== Keyboard Stats ==="
+    stats_packets: "<gray>Packets Received: <white><count></white>"
+    stats_last_update: "<gray>Last Global Update: <white><time></white>ms ago"
+    stats_tracked: "<gray>Players Tracked: <white><count></white>"
+    stats_player: "<gray>- <player> Active Keys: <white><count></white>"
+    debug_pressed: "<prefix><green>Keys pressed by <white><player></white>: <white><keys></white>"
+    flush: "<prefix><green>Flushed keyboard state for <white><player></white>"
+    is_down: "<prefix><green>Key <white><key></white> is pressed by <white><player></white>"
+    match_perfect: "<prefix><green>Key group matched perfectly: <white><keys></white>"
+
+  system:
+    debug_header: "<yellow>=== Observer Debug ==="
+    debug_version: "<gray>Version: <white><version></white>"
+    debug_layouts: "<gray>Loaded Layouts: <white><count></white>"
+    debug_saves: "<gray>Loaded Saves: <white><count></white>"
+    debug_clients: "<gray>Observer Clients: <white><count></white>"
+    debug_audio: "<gray>Audio Manager: <white>Native Adventure API (Lectern mode)</white>"
+    debug_audio_sent: "<gray>Total Sounds Sent: <white><count></white>"
+    debug_audio_last: "<gray>Last Played Sound: <white><sound></white>"
+    colors_payload: "<gray>Payload JSON: <white><json></white>"
+    colors_error: "<gray>Payload JSON: <red>Error: <error></red>"
+    resources_reload: "<prefix><green>Sent resource reload payload to all clients."
+    menu_opened: "<prefix><green>Opened menu <yellow><menu></yellow> for <white><count></white> players."
+    sound_played: "<prefix><green>Playing sound <white><sound></white> to <white><count></white> players <gray>(v:<volume> p:<pitch>)</gray>"
+
+  help:
+    header: "<gold>=== Observer Commands ==="
+    hud: "<yellow>/observer hud <gray>- Manage screen interfaces (itemtest, layout, text, etc)"
+    animation: "<yellow>/observer animation <gray>- Play or stop blockbench animations on players"
+    env: "<yellow>/observer env <gray>- Control weather, fog, sky colors, and screen effects"
+    key: "<yellow>/observer key <gray>- Test and debug the keyboard input system"
+    system: "<yellow>/observer system <gray>- Administrative commands (reload, debug, resources, etc)"
+    footer: "<gold>======================="

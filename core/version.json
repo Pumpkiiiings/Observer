@@ -1,0 +1,20 @@
+{
+  "plugin_version": "1.0.1",
+  "mod_version": "1.0.1",
+  "critical": true,
+  "message-plugin": [
+    "<gradient:#00ff88:#00b3ff><b>Observer Plugin v1.0.1</b></gradient>",
+    "<gray>¡Una nueva versión del plugin ha llegado!</gray>",
+    "",
+    "<white><b>Novedades:</b></white>",
+    "<gray>- Arreglo de un bug fatal de desconexión</gray>",
+    "<gray>- Se añadieron comandos <yellow>/observer env</yellow></gray>"
+  ],
+  "message-mod": [
+    "<gradient:#ff0044:#ff7700><b>Observer Mod v1.0.1</b></gradient>",
+    "<gray>¡Una nueva versión del mod cliente ha llegado!</gray>",
+    "",
+    "<white><b>Novedades:</b></white>",
+    "<gray>- Soporte para nuevas animaciones.</gray>"
+  ]
+}

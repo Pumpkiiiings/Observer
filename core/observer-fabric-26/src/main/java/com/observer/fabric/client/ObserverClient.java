@@ -95,6 +95,7 @@ public class ObserverClient implements ClientModInitializer {
             
             // Animations
             ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.action.PlayAnimationPayload.TYPE, com.observer.fabric.network.handler.PlayAnimationHandler::handle);
+            ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.action.SyncAnimationsPayload.TYPE, com.observer.fabric.network.handler.SyncAnimationsHandler::handle);
             
             LOGGER.info("PayloadReceiverManager and KeyboardTrackerClient registration complete.");
         } catch (Throwable t) {

@@ -37,6 +37,17 @@ public class ObserverPlayerManager implements Listener {
         org.bukkit.Bukkit.getScheduler().runTaskLater(ObserverPaper.getInstance(), () -> {
             if (event.getPlayer().isOnline()) {
                 ObserverPaper.getInstance().getNetworkManager().sendHandshakeRequest(event.getPlayer());
+                
+                // --- UPDATER NOTIFICATION ---
+                if (event.getPlayer().hasPermission("observer.admin") || event.getPlayer().isOp()) {
+                    com.observer.paper.updater.UpdateChecker checker = ObserverPaper.getInstance().getUpdateChecker();
+                    if (checker != null && checker.hasPluginUpdate() && ObserverPaper.getInstance().getConfig().getBoolean("updater.notify-admins", true)) {
+                        for (String msg : checker.getPluginMessages()) {
+                            event.getPlayer().sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(msg));
+                        }
+                    }
+                }
+                // ----------------------------
             }
         }, 20L);
     }

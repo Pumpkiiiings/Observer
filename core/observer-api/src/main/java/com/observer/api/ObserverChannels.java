@@ -21,7 +21,7 @@ public final class ObserverChannels {
     public static final String SCREEN_EFFECT = "screen_effect";
     public static final String PLAYER_ACTION = "player_action";
     public static final String PLAY_ANIMATION = "play_animation";
-
+    public static final String SYNC_ANIMATIONS = "sync_animations";
     private ObserverChannels() {}
 
     public static String channel(String path) {

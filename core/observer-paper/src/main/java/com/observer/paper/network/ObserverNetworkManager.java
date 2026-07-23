@@ -40,6 +40,8 @@ public class ObserverNetworkManager implements PluginMessageListener {
         Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_OPEN));
         Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.OBSERVER_KEYS_SYNC));
         Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.SCREEN_EFFECT));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.SYNC_ANIMATIONS));
+        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.PLAY_ANIMATION));
 
         Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.HANDSHAKE), this);
         Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_ACTION), this);
@@ -117,8 +119,50 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 HandshakePayload response = HandshakePayload.CODEC.decode(registryBuf);
 
                 ObserverPlayer observerPlayer = new ObserverPlayer(player, response.protocolVersion(), response.observerVersion(), response.features());
+
+                // --- UPDATER CHECK ---
+                if (plugin.getConfig().getBoolean("updater.enabled", true)) {
+                    String requiredModVer = plugin.getUpdateChecker().getLatestModVersion();
+                    String clientVer = response.observerVersion();
+                    if (com.observer.paper.updater.UpdateChecker.isNewerVersion(clientVer, requiredModVer)) {
+                        String action = plugin.getConfig().getString("updater.on-outdated-client.action", "MESSAGE").toUpperCase();
+                        if (action.equals("KICK")) {
+                            String kickMsg = plugin.getConfig().getString("updater.on-outdated-client.kick-message", "<red>Outdated mod!");
+                            kickMsg = kickMsg.replace("<version>", requiredModVer);
+                            net.kyori.adventure.text.Component comp = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(kickMsg);
+                            
+                            for (String m : plugin.getUpdateChecker().getModMessages()) {
+                                comp = comp.append(net.kyori.adventure.text.Component.newline())
+                                           .append(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(m));
+                            }
+                            
+                            final net.kyori.adventure.text.Component finalComp = comp;
+                            Bukkit.getScheduler().runTask(plugin, () -> player.kick(finalComp));
+                            return; // Stop handshake process
+                        } else if (action.equals("MESSAGE")) {
+                            String msg = plugin.getConfig().getString("updater.on-outdated-client.chat-message", "<gold>Outdated mod!");
+                            msg = msg.replace("<version>", requiredModVer);
+                            net.kyori.adventure.text.Component comp = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(msg);
+                            player.sendMessage(comp);
+                            
+                            for (String m : plugin.getUpdateChecker().getModMessages()) {
+                                player.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(m));
+                            }
+                            
+                            if (plugin.getConfig().getBoolean("updater.on-outdated-client.play-sound", true)) {
+                                String sound = plugin.getConfig().getString("updater.on-outdated-client.sound-name", "entity.experience_orb.pickup");
+                                Bukkit.getScheduler().runTask(plugin, () -> player.playSound(player.getLocation(), sound, 1f, 1f));
+                            }
+                        }
+                    }
+                }
+                // ---------------------
+
                 playerManager.addObserverPlayer(player, observerPlayer);
                 plugin.getLogger().info("Verified Observer client for player " + player.getName());
+
+                com.observer.api.payload.action.SyncAnimationsPayload syncPayload = new com.observer.api.payload.action.SyncAnimationsPayload(plugin.getAnimationManager().getAnimations());
+                sendPayload(player, ObserverChannels.channel(ObserverChannels.SYNC_ANIMATIONS), syncPayload, com.observer.api.payload.action.SyncAnimationsPayload.CODEC);
 
             } catch (Exception e) {
                 plugin.getLogger().warning("Failed to decode handshake from " + player.getName());

@@ -21,6 +21,9 @@ public class ObserverPaper extends JavaPlugin {
     private MenuManager menuManager;
     private com.observer.paper.keys.ObserverKeyboardManager keyboardManager;
     private com.observer.paper.keys.KeyActionManager keyActionManager;
+    private com.observer.paper.animation.ServerAnimationManager animationManager;
+    private com.observer.paper.config.MessageManager messageManager;
+    private com.observer.paper.updater.UpdateChecker updateChecker;
 
     @Override
     public void onEnable() {
@@ -40,6 +43,10 @@ public class ObserverPaper extends JavaPlugin {
         }
         
         saveDefaultConfig();
+        this.messageManager = new com.observer.paper.config.MessageManager(this);
+        this.updateChecker = new com.observer.paper.updater.UpdateChecker(this);
+        this.updateChecker.check();
+        
         this.soundManager = new com.observer.paper.audio.ObserverSoundManager(getLogger());
         this.environmentManager = new com.observer.paper.environment.ObserverEnvironmentManager(getLogger());
         this.playerManager = new ObserverPlayerManager();
@@ -74,6 +81,9 @@ public class ObserverPaper extends JavaPlugin {
         // Initialize layouts and saves synchronously so they are available immediately
         layoutManager.initialize();
         saveManager.initialize();
+        
+        this.animationManager = new com.observer.paper.animation.ServerAnimationManager(this);
+        this.animationManager.initialize();
 
         getLogger().info("Observer Paper enabled.");
     }
@@ -86,8 +96,16 @@ public class ObserverPaper extends JavaPlugin {
     public void reload() {
         reloadConfig();
         
+        if (messageManager != null) {
+            messageManager.reload();
+        }
+        
         if (keyActionManager != null) {
             keyActionManager.loadBinds();
+        }
+        
+        if (updateChecker != null) {
+            updateChecker.check();
         }
         
         if (layoutManager != null) {
@@ -96,6 +114,10 @@ public class ObserverPaper extends JavaPlugin {
         
         if (saveManager != null) {
             saveManager.reload();
+        }
+        
+        if (animationManager != null) {
+            animationManager.reload();
         }
         
         getLogger().info("[Observer] All systems reloaded.");
@@ -110,4 +132,7 @@ public class ObserverPaper extends JavaPlugin {
     public com.observer.paper.environment.ObserverEnvironmentManager getEnvironmentManager() { return environmentManager; }
     public MenuManager getMenuManager() { return menuManager; }
     public com.observer.paper.keys.ObserverKeyboardManager getKeyboardManager() { return keyboardManager; }
+    public com.observer.paper.animation.ServerAnimationManager getAnimationManager() { return animationManager; }
+    public com.observer.paper.config.MessageManager getMessageManager() { return messageManager; }
+    public com.observer.paper.updater.UpdateChecker getUpdateChecker() { return updateChecker; }
 }
