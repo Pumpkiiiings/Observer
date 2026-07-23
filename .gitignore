@@ -59,3 +59,4 @@ net/
 gradle/wrapper/
 .vscode/
 /docs/
+analysis/
