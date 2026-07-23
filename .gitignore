@@ -62,3 +62,4 @@ gradle/wrapper/
 analysis/
 
 core/misc/
+*.class
