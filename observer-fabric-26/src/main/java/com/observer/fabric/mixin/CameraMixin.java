@@ -8,18 +8,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// @Mixin(Camera.class)
+@Mixin(Camera.class)
 public abstract class CameraMixin {
 
-    // @Shadow protected abstract void setRotation(float yRot, float xRot);
+    @Shadow protected abstract void setRotation(float yRot, float xRot);
 
-    // @Shadow private float yRot;
-    // @Shadow private float xRot;
+    @Shadow private float yRot;
+    @Shadow private float xRot;
 
     private static final java.util.Random SHAKE_RANDOM = new java.util.Random();
 
-    // @Inject(method = "setup", at = @At("RETURN"))
-    private void onSetup(net.minecraft.world.level.BlockGetter level, net.minecraft.world.entity.Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
+    @Inject(method = "update", at = @At("RETURN"), require = 0)
+    private void onUpdate(net.minecraft.client.DeltaTracker deltaTracker, CallbackInfo ci) {
         if (ScreenEffectState.screenshakeActive) {
             float intensity = ScreenEffectState.screenshakeIntensity;
             float randomYaw = (SHAKE_RANDOM.nextFloat() - 0.5f) * 2f * intensity * 5f;

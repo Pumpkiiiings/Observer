@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  *   - Iris shaders: Bypass this pipeline entirely.
  *   - Sodium: Partially replaces fog rendering, but usually respects the vanilla UBO.
  */
-// @Mixin(FogRenderer.class)
+@Mixin(FogRenderer.class)
 public abstract class FogRendererMixin {
 
     @ModifyArgs(

@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// @Mixin(Gui.class)
+@Mixin(Gui.class)
 public class GuiMixin {
 
-    // @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("RETURN"))
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("RETURN"), require = 0)
     public void onRender(GuiGraphicsExtractor drawContext, DeltaTracker tickCounter, CallbackInfo ci) {
         for (ObserverComponent component : ComponentManager.getActiveComponents()) {
             component.render(drawContext, tickCounter);
