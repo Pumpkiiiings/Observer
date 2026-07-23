@@ -13,9 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
 
-    @Shadow public abstract boolean isSprinting();
-    @Shadow public abstract boolean isShiftKeyDown();
-
     @Inject(method = "jumpFromGround", at = @At("HEAD"))
     private void onJump(CallbackInfo ci) {
         if (ClientPlayNetworking.canSend(PlayerActionPayload.TYPE)) {
@@ -25,7 +22,8 @@ public abstract class LocalPlayerMixin {
 
     @Inject(method = "setSprinting", at = @At("HEAD"))
     private void onSprint(boolean sprinting, CallbackInfo ci) {
-        if (this.isSprinting() != sprinting) {
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        if (player.isSprinting() != sprinting) {
             if (ClientPlayNetworking.canSend(PlayerActionPayload.TYPE)) {
                 ClientPlayNetworking.send(new PlayerActionPayload(
                         sprinting ? PlayerActionType.START_SPRINTING : PlayerActionType.STOP_SPRINTING
@@ -36,7 +34,8 @@ public abstract class LocalPlayerMixin {
 
     @Inject(method = "setShiftKeyDown", at = @At("HEAD"))
     private void onSneak(boolean shiftKeyDown, CallbackInfo ci) {
-        if (this.isShiftKeyDown() != shiftKeyDown) {
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        if (player.isShiftKeyDown() != shiftKeyDown) {
             if (ClientPlayNetworking.canSend(PlayerActionPayload.TYPE)) {
                 ClientPlayNetworking.send(new PlayerActionPayload(
                         shiftKeyDown ? PlayerActionType.START_SNEAKING : PlayerActionType.STOP_SNEAKING
