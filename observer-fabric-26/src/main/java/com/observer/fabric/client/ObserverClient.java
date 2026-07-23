@@ -42,7 +42,12 @@ public class ObserverClient implements ClientModInitializer {
 
         LOGGER.info("Initializing Observer Fabric Client...");
         
-        com.observer.fabric.animation.ObserverAnimationManager.initialize();
+        try {
+            com.observer.fabric.animation.ObserverAnimationManager.initialize();
+        } catch (Throwable t) {
+            LOGGER.error("[Observer-FATAL] Crash during ObserverAnimationManager initialization:", t);
+            throw new RuntimeException("Observer failed to initialize animation manager", t);
+        }
 
         try {
             LOGGER.info("[Observer-DEBUG] Checking mod compatibility...");
@@ -58,8 +63,8 @@ public class ObserverClient implements ClientModInitializer {
             if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("immediatelyfast")) {
                 LOGGER.warn("[Observer-WARN] ImmediatelyFast is installed! This usually optimizes immediate mode rendering but check for visual conflicts.");
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed during compatibility check", e);
+        } catch (Throwable t) {
+            LOGGER.error("Failed during compatibility check", t);
         }
 
         try {
@@ -92,8 +97,8 @@ public class ObserverClient implements ClientModInitializer {
             ClientPlayNetworking.registerGlobalReceiver(com.observer.api.payload.action.PlayAnimationPayload.TYPE, com.observer.fabric.network.handler.PlayAnimationHandler::handle);
             
             LOGGER.info("PayloadReceiverManager and KeyboardTrackerClient registration complete.");
-        } catch (Exception e) {
-            LOGGER.error("Failed during PayloadReceiverManager initialization", e);
+        } catch (Throwable t) {
+            LOGGER.error("[Observer-FATAL] Crash during ObserverClient payload registration:", t);
         }
 
         // Register client tick for screen effects countdown

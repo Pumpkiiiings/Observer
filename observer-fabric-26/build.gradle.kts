@@ -42,6 +42,7 @@ dependencies {
             attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
         }
     }
+    include("com.zigythebird.playeranim:PlayerAnimationLibFabric:1.2.5+mc.26.1")
 
     implementation(project(":observer-api"))
     include(project(":observer-api"))
