@@ -43,6 +43,18 @@ public final class ScreenEffectPayloadHandler {
                             + payload.r() + "," + payload.g() + "," + payload.b() + "," + payload.alpha()
                             + ") duration=" + payload.durationTicks() + " ticks");
                 }
+                case VIGNETTE -> {
+                    ScreenEffectState.vignetteActive = true;
+                    ScreenEffectState.vignetteR = payload.r();
+                    ScreenEffectState.vignetteG = payload.g();
+                    ScreenEffectState.vignetteB = payload.b();
+                    ScreenEffectState.vignetteAlpha = payload.alpha();
+                    ScreenEffectState.vignetteTicksRemaining = payload.durationTicks();
+                    ScreenEffectState.vignetteTotalTicks = payload.durationTicks();
+                    ObserverClient.LOGGER.info("[Observer-ScreenFX] Vignette activated: rgba=("
+                            + payload.r() + "," + payload.g() + "," + payload.b() + "," + payload.alpha()
+                            + ") duration=" + payload.durationTicks() + " ticks");
+                }
             }
         });
     }

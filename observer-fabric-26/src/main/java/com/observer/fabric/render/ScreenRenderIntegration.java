@@ -24,14 +24,7 @@ public class ScreenRenderIntegration implements HudElement {
     public void extractRenderState(GuiGraphicsExtractor context, DeltaTracker tickCounter) {
         // --- Screen Effects ---
 
-        // Screenshake: offset the entire render matrix
-        if (com.observer.fabric.screen.ScreenEffectState.screenshakeActive) {
-            float intensity = com.observer.fabric.screen.ScreenEffectState.screenshakeIntensity;
-            float offsetX = (SHAKE_RANDOM.nextFloat() - 0.5f) * 2f * intensity * 8f;
-            float offsetY = (SHAKE_RANDOM.nextFloat() - 0.5f) * 2f * intensity * 8f;
-            context.pose().pushMatrix();
-            context.pose().translate(offsetX, offsetY);
-        }
+        // Screenshake is now handled in CameraMixin to shake the actual 3D world instead of the HUD.
 
         // Tint: draw a fullscreen color overlay with fading alpha
         if (com.observer.fabric.screen.ScreenEffectState.tintActive) {
@@ -50,6 +43,31 @@ public class ScreenRenderIntegration implements HudElement {
             int screenHeight = context.guiHeight();
             int color = ((int)(alpha * 255) << 24) | (r << 16) | (g << 8) | b;
             context.fill(0, 0, screenWidth, screenHeight, color);
+        }
+
+        // Vignette: draw gradients on the edges
+        if (com.observer.fabric.screen.ScreenEffectState.vignetteActive) {
+            int r = com.observer.fabric.screen.ScreenEffectState.vignetteR;
+            int g = com.observer.fabric.screen.ScreenEffectState.vignetteG;
+            int b = com.observer.fabric.screen.ScreenEffectState.vignetteB;
+            float baseAlpha = com.observer.fabric.screen.ScreenEffectState.vignetteAlpha;
+            int remaining = com.observer.fabric.screen.ScreenEffectState.vignetteTicksRemaining;
+            int total = com.observer.fabric.screen.ScreenEffectState.vignetteTotalTicks;
+
+            float fadeProgress = total > 0 ? (float) remaining / total : 1f;
+            float alpha = fadeProgress < 0.25f ? baseAlpha * (fadeProgress / 0.25f) : baseAlpha;
+
+            int screenWidth = context.guiWidth();
+            int screenHeight = context.guiHeight();
+            int color = ((int)(alpha * 255) << 24) | (r << 16) | (g << 8) | b;
+            int transparent = 0x00000000;
+
+            int thickness = Math.max(10, Math.min(screenWidth, screenHeight) / 3);
+
+            // Top
+            context.fillGradient(0, 0, screenWidth, thickness, color, transparent);
+            // Bottom
+            context.fillGradient(0, screenHeight - thickness, screenWidth, screenHeight, transparent, color);
         }
 
         // --- HUD Components ---

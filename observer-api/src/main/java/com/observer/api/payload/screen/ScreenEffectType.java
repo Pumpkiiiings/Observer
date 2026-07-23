@@ -7,5 +7,7 @@ public enum ScreenEffectType {
     /** Shakes the player's screen with configurable intensity and duration. */
     SCREENSHAKE,
     /** Applies a color tint/vignette overlay on the player's screen. */
-    TINT
+    TINT,
+    /** Applies a vignette overlay on the player's screen. */
+    VIGNETTE
 }

@@ -8,7 +8,9 @@
   "client": [
     "FogRendererMixin",
     "ClientLevelMixin",
-    "LightTextureMixin"
+    "LightTextureMixin",
+    "CameraMixin",
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

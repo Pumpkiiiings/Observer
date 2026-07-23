@@ -489,6 +489,31 @@ public class ObserverCommand {
                             )
                         )
                     )
+                    .then(Commands.literal("vignette")
+                        .then(Commands.argument("r", IntegerArgumentType.integer(0, 255))
+                            .then(Commands.argument("g", IntegerArgumentType.integer(0, 255))
+                                .then(Commands.argument("b", IntegerArgumentType.integer(0, 255))
+                                    .then(Commands.argument("alpha", FloatArgumentType.floatArg(0.0f, 1.0f))
+                                        .then(Commands.argument("duration", IntegerArgumentType.integer(1))
+                                            .executes(ctx -> {
+                                                List<Player> targets = ctx.getArgument("targets", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource());
+                                                int r = IntegerArgumentType.getInteger(ctx, "r");
+                                                int g = IntegerArgumentType.getInteger(ctx, "g");
+                                                int b = IntegerArgumentType.getInteger(ctx, "b");
+                                                float alpha = FloatArgumentType.getFloat(ctx, "alpha");
+                                                int duration = IntegerArgumentType.getInteger(ctx, "duration");
+                                                for (Player target : targets) {
+                                                    com.observer.paper.api.PaperObserverScreenAPI.playScreenVignette(target, r, g, b, alpha, duration);
+                                                }
+                                                ctx.getSource().getSender().sendMessage("§a[Observer] Played screen vignette on " + targets.size() + " players.");
+                                                return 1;
+                                            })
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 )
             );
     }

@@ -2,7 +2,7 @@ name: ObserverPaper
 version: "1.0.1"
 main: com.observer.paper.ObserverPaper
 api-version: "1.21"
-authors: [Observer Team]
+authors: [Pumpkings]
 description: Server-side component of the Observer architecture.
 dependencies:
   server:

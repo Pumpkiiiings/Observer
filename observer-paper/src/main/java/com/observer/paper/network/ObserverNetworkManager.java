@@ -46,6 +46,7 @@ public class ObserverNetworkManager implements PluginMessageListener {
         Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.MENU_CLOSE), this);
 
         Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.OBSERVER_KEYS_UPDATE), this);
+        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, ObserverChannels.channel(ObserverChannels.PLAYER_ACTION), this);
     }
 
     public void sendHandshakeRequest(Player player) {
@@ -144,6 +145,44 @@ public class ObserverNetworkManager implements PluginMessageListener {
                 ObserverPaper.getInstance().getKeyboardManager().updateKeys(player, payload.pressedKeys());
             } catch (Exception e) {
                 plugin.getLogger().warning("Failed to decode KeysUpdatePayload from " + player.getName());
+                e.printStackTrace();
+            }
+        } else if (channel.equals(ObserverChannels.channel(ObserverChannels.PLAYER_ACTION))) {
+            try {
+                ByteBuf buf = Unpooled.wrappedBuffer(message);
+                MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
+                RegistryAccess registryAccess = server.registryAccess();
+                RegistryFriendlyByteBuf registryBuf = new RegistryFriendlyByteBuf(buf, registryAccess);
+                
+                com.observer.api.payload.action.PlayerActionPayload payload = com.observer.api.payload.action.PlayerActionPayload.CODEC.decode(registryBuf);
+                
+                // Fire Bukkit event on the main thread
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    switch (payload.actionType()) {
+                        case JUMP -> {
+                            com.observer.paper.api.events.ObserverPlayerJumpEvent event = new com.observer.paper.api.events.ObserverPlayerJumpEvent(player);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                        case START_SPRINTING -> {
+                            com.observer.paper.api.events.ObserverPlayerSprintEvent event = new com.observer.paper.api.events.ObserverPlayerSprintEvent(player, true);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                        case STOP_SPRINTING -> {
+                            com.observer.paper.api.events.ObserverPlayerSprintEvent event = new com.observer.paper.api.events.ObserverPlayerSprintEvent(player, false);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                        case START_SNEAKING -> {
+                            com.observer.paper.api.events.ObserverPlayerSneakEvent event = new com.observer.paper.api.events.ObserverPlayerSneakEvent(player, true);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                        case STOP_SNEAKING -> {
+                            com.observer.paper.api.events.ObserverPlayerSneakEvent event = new com.observer.paper.api.events.ObserverPlayerSneakEvent(player, false);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                plugin.getLogger().warning("Failed to decode PlayerActionPayload from " + player.getName());
                 e.printStackTrace();
             }
         }

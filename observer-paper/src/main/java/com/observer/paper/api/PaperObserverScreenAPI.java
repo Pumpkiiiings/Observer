@@ -57,6 +57,26 @@ public class PaperObserverScreenAPI {
         sendEffect(player, payload);
     }
 
+    /**
+     * Applies a vignette overlay on the target player's screen (edges only).
+     *
+     * @param player        The player to affect
+     * @param r             Red component (0-255)
+     * @param g             Green component (0-255)
+     * @param b             Blue component (0-255)
+     * @param alpha         Opacity (0.0 = transparent, 1.0 = fully opaque)
+     * @param durationTicks How long the vignette lasts in ticks (20 ticks = 1 second)
+     */
+    public static void playScreenVignette(Player player, int r, int g, int b, float alpha, int durationTicks) {
+        ScreenEffectPayload payload = new ScreenEffectPayload(
+                ScreenEffectType.VIGNETTE,
+                0f,
+                durationTicks,
+                r, g, b, alpha
+        );
+        sendEffect(player, payload);
+    }
+
     private static void sendEffect(Player player, ScreenEffectPayload payload) {
         ObserverPaper plugin = ObserverPaper.getInstance();
         if (plugin == null) return;

@@ -9,7 +9,9 @@
     "FogRendererMixin",
     "ClientLevelMixin",
     "LightTextureMixin",
-    "GuiMixin"
+    "GuiMixin",
+    "CameraMixin",
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
