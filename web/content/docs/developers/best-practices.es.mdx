@@ -1,0 +1,93 @@
+---
+title: Mejores Prácticas
+description: Reglas y consejos para desarrollar con Observer.
+---
+
+# Mejores Prácticas
+
+Al integrar tu plugin con Observer, seguir estas pautas garantizará una experiencia fluida, de alto rendimiento y libre de errores para tus jugadores. Dado que Observer opera fuertemente en el lado del cliente, la optimización de red y la gestión de recursos son fundamentales.
+
+## 1. Siempre Verifica al Jugador
+
+Nunca asumas que un jugador tiene el mod Observer instalado. Los jugadores Vanilla no pueden procesar paquetes de red personalizados, y enviárselos podría resultar en fallos silenciosos o advertencias en la consola.
+
+**Siempre envuelve tu lógica:**
+```java
+if (ObserverAPI.isObserverPlayer(player)) {
+    // Es seguro enviar HUDs, reproducir sonidos espaciales, etc.
+}
+```
+
+## 2. Convenciones de Nombres para Componentes (IDs)
+
+El HUD es un lienzo compartido entre todos los plugins del servidor que utilizan Observer. Para evitar que tus elementos del HUD sobrescriban accidentalmente los de otro plugin, **siempre prefija tus IDs de componentes con el nombre de tu plugin**.
+
+**❌ Mal:**
+```java
+ObserverAPI.createText(player, "barra_salud", ...);
+```
+
+**✅ Bien:**
+```java
+ObserverAPI.createText(player, "mipluginrpg:barra_salud", ...);
+```
+
+## 3. Optimización de Red (No satures los paquetes)
+
+Actualizar texto o elementos del HUD en cada tick del servidor (20 veces por segundo) consume ancho de banda. Envía actualizaciones **únicamente** cuando los datos subyacentes hayan cambiado realmente.
+
+**❌ Mal:**
+```java
+// Dentro de un BukkitRunnable que se ejecuta cada 1 tick
+ObserverAPI.updateText(player, "mirpg:mana", "Maná: " + player.getMana());
+```
+
+**✅ Bien:**
+```java
+// Solo envía el paquete si el valor de maná ha cambiado desde el último tick
+if (manáActual != manáAnterior) {
+    ObserverAPI.updateText(player, "mirpg:mana", "Maná: " + manáActual);
+    manáAnterior = manáActual;
+}
+```
+
+## 4. Resource Packs del Servidor
+
+Observer depende en gran medida de recursos personalizados (texturas para los menús, archivos `.ogg` para los sonidos, modelos para las animaciones). **Siempre debes empaquetar tus recursos en un Server Resource Pack** y obligar a los jugadores a descargarlo al entrar.
+
+Si un jugador no tiene el resource pack cargado:
+- Las texturas faltantes aparecerán como el clásico bloque morado y negro.
+- Los sonidos personalizados simplemente no se escucharán.
+- Las animaciones de Blockbench fallarán.
+
+## 5. Retrasos del Handshake al Entrar
+
+Cuando un jugador entra al servidor (`PlayerJoinEvent`), es muy probable que aún no haya completado el Handshake de Observer instantáneamente. El cliente necesita un momento para inicializar el mundo y responder.
+
+Si quieres dibujar un HUD inmediatamente cuando un jugador inicia sesión, **espera al menos 10-20 ticks** antes de verificar `isObserverPlayer` y enviar los componentes.
+
+```java
+@EventHandler
+public void onJoin(PlayerJoinEvent event) {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if (ObserverAPI.isObserverPlayer(event.getPlayer())) {
+            // Dibujar el HUD por defecto
+        }
+    }, 20L); // Esperar 1 segundo
+}
+```
+
+## 6. Limpieza al Morir o Desconectarse
+
+Los componentes de Observer persisten en la pantalla hasta que son eliminados explícitamente. Sin embargo, si un jugador se desconecta, su cliente descarga el HUD de forma natural.
+
+**No** necesitas limpiar el HUD manualmente en el `PlayerQuitEvent`. Sin embargo, **deberías** considerar limpiar u ocultar ciertos elementos durante un `PlayerDeathEvent` si no quieres que sigan siendo visibles en la pantalla roja de reaparición.
+
+```java
+@EventHandler
+public void onDeath(PlayerDeathEvent event) {
+    if (ObserverAPI.isObserverPlayer(event.getEntity())) {
+        ObserverAPI.clearHUD(event.getEntity());
+    }
+}
+```

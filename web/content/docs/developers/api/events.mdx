@@ -1,0 +1,113 @@
+---
+title: Events
+description: Learn about the C2S events dispatched by the Observer client.
+---
+
+# Events
+
+Observer dispatches Bukkit events whenever the client sends data to the server. These events allow you to detect when a player jumps, sprints, sneaks, or interacts with the mod in other ways.
+
+All events reside in the `com.observer.paper.api.events` package and inherit from `ObserverPlayerEvent`.
+
+---
+
+### `ObserverPlayerJumpEvent`
+> Fired when the client initiates a jump.
+
+`com.observer.paper.api.events.ObserverPlayerJumpEvent`
+
+**Signature**
+```java
+public class ObserverPlayerJumpEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who jumped.
+
+**Example**
+```java
+@EventHandler
+public void onPlayerJump(ObserverPlayerJumpEvent event) {
+    Player player = event.getPlayer();
+    player.sendMessage("You jumped!");
+}
+```
+
+---
+
+### `ObserverPlayerSprintEvent`
+> Fired when the player changes their sprinting state.
+
+`com.observer.paper.api.events.ObserverPlayerSprintEvent`
+
+**Signature**
+```java
+public class ObserverPlayerSprintEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player whose sprint state changed.
+
+#### `isSprinting`
+```java
+public boolean isSprinting()
+```
+Returns: `true` if they started sprinting, `false` if they stopped.
+
+**Example**
+```java
+@EventHandler
+public void onSprint(ObserverPlayerSprintEvent event) {
+    if (event.isSprinting()) {
+        event.getPlayer().sendMessage("You started sprinting!");
+    } else {
+        event.getPlayer().sendMessage("You stopped sprinting.");
+    }
+}
+```
+
+---
+
+### `ObserverPlayerSneakEvent`
+> Fired when the player changes their sneaking state.
+
+`com.observer.paper.api.events.ObserverPlayerSneakEvent`
+
+**Signature**
+```java
+public class ObserverPlayerSneakEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player whose sneak state changed.
+
+#### `isSneaking`
+```java
+public boolean isSneaking()
+```
+Returns: `true` if they started sneaking, `false` if they stood up.
+
+**Example**
+```java
+@EventHandler
+public void onSneak(ObserverPlayerSneakEvent event) {
+    if (event.isSneaking()) {
+        // Trigger a custom crouch animation
+    }
+}
+```

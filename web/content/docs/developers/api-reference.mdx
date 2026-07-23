@@ -1,0 +1,98 @@
+---
+title: API Reference
+description: Complete reference for the Observer API interfaces, classes, and events.
+---
+
+# API Reference
+
+Complete reference for the `Observer-API` interfaces, classes, and events. All classes reside in the `com.observer` package.
+
+## ObserverAPI
+
+Static accessor for the majority of the features. Located in `com.observer.paper.api.ObserverAPI`.
+
+| Method | Return Type | Description |
+|---|---|---|
+| `isObserverPlayer(Player)` | `boolean` | Returns true if the player has passed the Handshake and has the mod installed. |
+| `createText(...)` | `void` | Creates a tickable text component on the player's screen. |
+| `createItem(...)` | `void` | Renders a 3D item component on the player's screen. |
+| `updateText(Player, String, String)` | `void` | Updates the content of an existing text component. |
+| `removeComponent(Player, String)` | `void` | Removes a specific component by ID. |
+| `clearHUD(Player)` | `void` | Wipes the entire HUD for the given player. |
+| `playSound(Player, String, ...)` | `void` | Plays a 2D sound for the player. |
+| `setFogColor(Player, r, g, b)` | `void` | Overrides the client's fog color. |
+| `setSkyColor(Player, r, g, b)` | `void` | Overrides the client's sky color. |
+| `setMoonColor(Player, r, g, b)` | `void` | Overrides the client's moon color. |
+| `setTrueDarkness(Player, boolean)`| `void` | Enables or disables ambient light rendering. |
+| `startDenseFog(Player, ...)` | `void` | Modifies the fog render distance. |
+
+---
+
+## Specific API Classes
+
+Each class handles a specific domain of effects. See the individual API pages under the **API** sidebar folder for full method documentation.
+
+- `PaperObserverSoundAPI` — Spatial 3D sound playback and stopping sounds.
+- `PaperObserverScreenAPI` — Screenshake, screen tinting, and vignette overlays.
+- `PaperObserverAnimationAPI` — Triggering Blockbench animations on player entities.
+- `PaperObserverEnvironmentAPI` — Applying environment profiles and setting fog density.
+- `PaperObserverKeyboardAPI` — Polling for specific keys currently held down by players.
+
+---
+
+## C2S Events
+
+Observer dispatches Bukkit events when the client sends data to the server. All events are located in `com.observer.paper.api.events` and `com.observer.paper.api.event`.
+
+### Menu Events (WIP)
+- `MenuActionEvent`: Fired when a player triggers an action in an Observer menu.
+- `MenuCloseEvent`: Fired when a player closes an Observer menu.
+
+### `PlayerKeyPressEvent`
+Fired when a player presses down a physical key.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player who pressed the key. |
+| `getAsciiKey()`| `int` | The raw ASCII code of the key. |
+
+### `PlayerKeyReleaseEvent`
+Fired when a player releases a physical key.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player who released the key. |
+| `getAsciiKey()`| `int` | The raw ASCII code of the key. |
+
+### `PlayerKeyMatchEvent`
+Fired when a predefined server combination (`KeyAction`) is successfully pressed.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player. |
+| `getAction()` | `KeyAction`| The matched action. |
+
+### `ObserverPlayerJumpEvent`
+Fired when the client initiates a jump.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player who jumped. |
+
+### `ObserverPlayerSprintEvent`
+Fired when the sprinting state changes.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player. |
+| `isSprinting()`| `boolean`| True if they started sprinting, false if they stopped. |
+
+### `ObserverPlayerSneakEvent`
+Fired when the sneaking state changes.
+| Method | Return Type | Description |
+|---|---|---|
+| `getPlayer()` | `Player` | The player. |
+| `isSneaking()` | `boolean`| True if they started sneaking, false if they stopped. |
+
+---
+
+## Core Classes
+
+- `ComponentAlignment` — The 9 screen anchors (`TOP_LEFT`, `CENTER`, `BOTTOM_RIGHT`, etc.)
+- `TextAlignment` — How text aligns within its own box (`LEFT`, `CENTER`, `RIGHT`).
+- `SoundDefinition` — Builder class for configuring spatial sounds (X, Y, Z, Pitch, Volume).

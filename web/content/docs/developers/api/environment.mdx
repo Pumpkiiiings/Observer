@@ -1,0 +1,102 @@
+---
+title: Environment
+description: Control fog distance, sky color, and ambient lighting overrides.
+---
+
+# Environment
+
+Observer allows you to manipulate the environment lighting, colors, and fog density dynamically per player.
+
+---
+
+### `PaperObserverEnvironmentAPI`
+> Advanced environment state management.
+
+`com.observer.paper.api.PaperObserverEnvironmentAPI`
+
+**Signature**
+```java
+public class PaperObserverEnvironmentAPI
+```
+
+**Methods**
+
+#### `setSkyColor`
+```java
+public static void setSkyColor(Player player, int rgbColor)
+```
+Overwrites the client's sky color. E.g., `0xFF0000` for red.
+
+#### `setFogColor`
+```java
+public static void setFogColor(Player player, int rgbColor)
+```
+Overwrites the client's fog color.
+
+#### `setFogDensity`
+```java
+public static void setFogDensity(Player player, float density)
+```
+Automatically calculates and modifies the fog render distance based on a density float. A density of `0.5f` represents very thick fog.
+
+#### `setTrueDarkness`
+```java
+public static void setTrueDarkness(Player player, boolean enabled)
+```
+Enables or disables ambient light rendering, causing unlit areas to be pitch black.
+
+#### `applyProfile`
+```java
+public static void applyProfile(Player player, EnvironmentProfile profile)
+```
+Applies a bulk configuration of sky, fog, and light settings at once.
+
+#### `resetEnvironment`
+```java
+public static void resetEnvironment(Player player)
+```
+Resets all sky, fog, moon, and light changes back to default vanilla rendering.
+
+**Example**
+```java
+import com.observer.paper.api.PaperObserverEnvironmentAPI;
+
+PaperObserverEnvironmentAPI.setTrueDarkness(player, true);
+PaperObserverEnvironmentAPI.setFogColor(player, 0xFF0000); // Red
+PaperObserverEnvironmentAPI.setFogDensity(player, 0.5f);
+```
+
+---
+
+### `ObserverAPI.startDenseFog`
+
+If you want manual control over the exact fog start and end distances instead of relying on density math, you can use the base API:
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+// Start fog that begins 2 blocks away and ends at 10 blocks away, with 100% thickness
+ObserverAPI.startDenseFog(player, 2.0f, 10.0f, 1.0f);
+
+// Revert to normal Vanilla fog distance
+ObserverAPI.stopDenseFog(player);
+```
+
+---
+
+### `EnvironmentProfile`
+
+If you want to apply a bunch of changes at once (like entering a custom biome), you can use `EnvironmentProfile` to bundle them together:
+
+```java
+import com.observer.api.environment.EnvironmentProfile;
+
+EnvironmentProfile hellProfile = EnvironmentProfile.builder()
+    .skyColor(255, 0, 0)
+    .fogColor(100, 0, 0)
+    .fogDensity(0.2f)
+    .trueDarkness(true)
+    .build();
+
+PaperObserverEnvironmentAPI.applyProfile(player, hellProfile);
+```

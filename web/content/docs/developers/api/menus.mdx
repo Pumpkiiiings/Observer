@@ -1,0 +1,47 @@
+---
+title: Menus
+description: Create interactive GUI menus on the player's screen.
+---
+
+# Menus
+
+<Callout type="warn">
+**In Development (WIP)**
+
+The Menu API is currently undergoing a major rewrite to support a much more robust component-based layout system (similar to HTML/CSS). 
+
+The methods described below are subject to change in future releases, and some functionalities might be unstable.
+</Callout>
+
+Observer allows you to create interactive, mouse-driven GUI menus on the player's screen.
+
+## Opening a Menu
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+// Open a menu with a specific ID
+ObserverAPI.openMenu(player, "my_custom_menu");
+```
+
+## Menu Events
+
+### `MenuActionEvent`
+> Fired when a player triggers an action in an Observer menu.
+
+`com.observer.paper.api.event.MenuActionEvent`
+
+**Signature**
+```java
+public class MenuActionEvent extends ObserverMenuEvent
+```
+
+### `MenuCloseEvent`
+> Fired when a player closes an Observer menu.
+
+`com.observer.paper.api.event.MenuCloseEvent`
+
+**Signature**
+```java
+public class MenuCloseEvent extends ObserverMenuEvent
+```

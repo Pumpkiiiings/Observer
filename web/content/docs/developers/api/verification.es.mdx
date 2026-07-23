@@ -1,0 +1,45 @@
+---
+title: Verificación de Jugador
+description: Comprueba si un jugador tiene el mod Observer instalado.
+---
+
+# Verificación de Jugador
+
+Antes de enviar cualquier paquete de Observer (como dibujar un HUD o reproducir un sonido espacial), debes verificar que el jugador realmente tenga el mod Observer instalado. Los jugadores de Vanilla no pueden procesar estos paquetes personalizados.
+
+Observer usa un protocolo de *Handshake* (Apretón de manos). Cuando un jugador entra, el servidor le pregunta si tiene el mod, y el cliente responde. Si lo tiene, se le marca internamente como un "Jugador Observer".
+
+---
+
+### `ObserverAPI`
+> El acceso estático principal para las características de Observer.
+
+`com.observer.paper.api.ObserverAPI`
+
+**Firma**
+```java
+public class ObserverAPI
+```
+
+**Métodos**
+
+#### `isObserverPlayer`
+```java
+public static boolean isObserverPlayer(Player player)
+```
+Retorna: `true` si el jugador ha pasado el Handshake y tiene el mod instalado, `false` en caso contrario.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.ObserverAPI;
+
+public void hacerAlgoGenial(Player player) {
+    if (ObserverAPI.isObserverPlayer(player)) {
+        // Es seguro usar las funciones de Observer
+        player.sendMessage("¡Tienes el mod instalado!");
+    } else {
+        // Plan B para jugadores vanilla
+        player.sendMessage("Por favor, instala el mod Observer para ver esto.");
+    }
+}
+```

@@ -1,0 +1,36 @@
+---
+title: Comandos
+description: Lista completa de comandos y permisos para Observer.
+---
+
+# Comandos
+
+Observer registra el comando principal `/observer` en el servidor. La mayoría de los comandos están creados específicamente para depurar y probar las APIs en el juego sin necesidad de programar un plugin.
+
+Todos los comandos requieren permisos de Operador (`OP`).
+
+## Comandos Generales
+
+| Subcomando | Uso | Descripción |
+|---|---|---|
+| `reload` | `/observer reload` | Recarga el archivo `config.yml` desde el disco. |
+| `debug` | `/observer debug` | Imprime estadísticas del servidor (versión, layouts, clientes observer conectados y métricas del motor de audio). |
+| `resources reload` | `/observer resources reload` | Fuerza a todos los clientes de Observer a recargar sus Resource Packs instantáneamente. |
+| `parse <texto>` | `/observer parse <texto>` | Toma un texto en formato MiniMessage y muestra cómo es sanitizado, procesado y convertido al paquete JSON crudo. |
+| `debug colors <texto>`| `/observer debug colors <texto>` | Similar a parse, pero imprime explícitamente el JSON nativo de Minecraft para comparaciones cruzadas. |
+| `itemtest` | `/observer itemtest` | Genera un ítem 3D de prueba (`minecraft:diamond_sword`) en el centro de tu pantalla para verificar el HUD. |
+| `envtest` | `/observer envtest` | Dispara una secuencia completa de entorno (Color de cielo, niebla, luna, oscuridad total y niebla densa) para probar la red. |
+
+---
+
+## Comandos de Depuración de Teclado
+
+Observer incluye un potente conjunto de comandos para ayudarte a rastrear qué teclas mantienen presionadas los jugadores.
+
+| Subcomando | Uso | Descripción |
+|---|---|---|
+| `key stats` | `/observer key stats` | Muestra estadísticas globales: total de paquetes, latencia de actualización y lista los jugadores con teclas activas. |
+| `key debug <jugador>` | `/observer key debug <jugador>` | Imprime los códigos ASCII exactos de todas las teclas que el jugador tiene presionadas en este instante. |
+| `key flush <jugador>` | `/observer key flush <jugador>` | Fuerza al servidor a borrar la memoria del estado del teclado del jugador objetivo. |
+| `key iskeydown <jugador> <ascii>`| `/observer key iskeydown <jugador> <ascii>`| Comprueba si el jugador está presionando una tecla ASCII específica e imprime el resultado. |
+| `key matchgroup <jugador> <grupo>`| `/observer key matchgroup <jugador> <grupo>`| Comprueba si las teclas del jugador coinciden exactamente con una lista de códigos ASCII separada por comas. |

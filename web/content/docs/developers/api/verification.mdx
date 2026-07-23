@@ -1,0 +1,45 @@
+---
+title: Player Verification
+description: Check if a player has the Observer mod installed.
+---
+
+# Player Verification
+
+Before sending any Observer payloads (like drawing a HUD or playing a spatial sound), you must verify that the player actually has the Observer mod installed. Vanilla players cannot process these custom payloads.
+
+Observer uses a Handshake protocol. When a player joins, the server asks them if they have the mod, and the client responds. If they do, they are marked as an "Observer Player".
+
+---
+
+### `ObserverAPI`
+> The primary static accessor for Observer features.
+
+`com.observer.paper.api.ObserverAPI`
+
+**Signature**
+```java
+public class ObserverAPI
+```
+
+**Methods**
+
+#### `isObserverPlayer`
+```java
+public static boolean isObserverPlayer(Player player)
+```
+Returns: `true` if the player has passed the Handshake and has the Observer mod installed, `false` otherwise.
+
+**Example**
+```java
+import com.observer.paper.api.ObserverAPI;
+
+public void doSomethingCool(Player player) {
+    if (ObserverAPI.isObserverPlayer(player)) {
+        // Safe to use Observer features
+        player.sendMessage("You have the mod installed!");
+    } else {
+        // Fallback for vanilla players
+        player.sendMessage("Please install the Observer mod to see this feature.");
+    }
+}
+```

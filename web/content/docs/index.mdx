@@ -1,0 +1,37 @@
+---
+title: Home
+description: Welcome to the official Observer documentation.
+---
+
+# What is Observer?
+
+Observer is a powerful client-server framework for Minecraft designed to break the boundaries of traditional plugin development. 
+
+While normal plugins are limited to what the vanilla Minecraft client can display (like inventory menus, ActionBar, and BossBar), **Observer allows servers to directly control the client's visual and auditory experience**.
+
+## What is it for?
+
+By combining the server plugin (`observer-paper`) and the client mod (`observer-fabric`), you can create incredibly immersive experiences:
+
+- **Graphical Interfaces (HUD):** Draw custom text, 3D items, or flat colors directly onto the players' screens, without using the outdated ActionBar.
+- **3D Spatial Audio:** Play positional sound effects accurately, perfect for horror maps or directional indicators.
+- **Atmosphere and Environment:** Override the sky color, fog color, or enable "True Darkness" to eliminate ambient lighting and create terrifying or mystical atmospheres.
+- **Keyboard Detection:** Find out exactly what physical keys a player is pressing (W, A, S, D, Space, etc.) without relying on vague movement events.
+- **Screen Effects:** Shake the camera (Screen Shake) or apply red tints when a player takes damage.
+
+## Compatibility
+
+Observer has been thoroughly tested across various environments to ensure stability:
+
+- **Tested and working with**: Optimization modpacks including the **Sodium** mod (from 1.21.4 to 26.2).
+- **Known incompatibilities**: Lunar Client (currently unsupported).
+- **Untested with**: The new Vulkan graphics engine.
+- **No support for**: NeoForge or Forge (Fabric native support only).
+
+## Where do I start?
+
+The documentation is divided into three main categories, depending on your role:
+
+1. **[Players](/docs/players)**: If you just want to play on a server that uses Observer, here you will find how to install the mod on your client.
+2. **[Owners](/docs/owners)**: If you are a server owner and want to install Observer, configure its options, or test debugging commands.
+3. **[Developers](/docs/developers)**: If you are a Java programmer and want to write Paper plugins that leverage the Observer API to create unique features on your server.

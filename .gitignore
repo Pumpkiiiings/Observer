@@ -58,4 +58,4 @@ net/
 # Custom additions
 gradle/wrapper/
 .vscode/
-docs/
+/docs/

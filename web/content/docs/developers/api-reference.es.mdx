@@ -1,0 +1,98 @@
+---
+title: Referencia de API
+description: Referencia completa para las interfaces, clases y eventos de Observer API.
+---
+
+# Referencia de API
+
+Referencia completa para las interfaces, clases y eventos de `Observer-API`. Todas las clases residen en el paquete `com.observer`.
+
+## ObserverAPI
+
+El acceso estático para la mayoría de las características. Ubicado en `com.observer.paper.api.ObserverAPI`.
+
+| Método | Retorno | Descripción |
+|---|---|---|
+| `isObserverPlayer(Player)` | `boolean` | Retorna verdadero si el jugador ha pasado el Handshake y tiene el mod instalado. |
+| `createText(...)` | `void` | Crea un componente de texto dibujado en la pantalla del jugador. |
+| `createItem(...)` | `void` | Dibuja un ítem 3D en la pantalla del jugador. |
+| `updateText(Player, String, String)` | `void` | Actualiza el contenido de un componente de texto ya existente. |
+| `removeComponent(Player, String)` | `void` | Elimina un componente específico usando su ID. |
+| `clearHUD(Player)` | `void` | Elimina todo el HUD del jugador seleccionado. |
+| `playSound(Player, String, ...)` | `void` | Reproduce un sonido 2D. |
+| `setFogColor(Player, r, g, b)` | `void` | Sobrescribe el color de la niebla. |
+| `setSkyColor(Player, r, g, b)` | `void` | Sobrescribe el color del cielo. |
+| `setMoonColor(Player, r, g, b)` | `void` | Sobrescribe el color de la luna. |
+| `setTrueDarkness(Player, boolean)`| `void` | Activa o desactiva la luz ambiental del entorno. |
+| `startDenseFog(Player, ...)` | `void` | Modifica la distancia de dibujado de la niebla. |
+
+---
+
+## Clases API Específicas
+
+Cada clase maneja un dominio específico de efectos. Revisa las páginas individuales en la carpeta **API** de la barra lateral para su documentación detallada.
+
+- `PaperObserverSoundAPI` — Reproducción de sonidos 3D espaciales y detención de sonidos.
+- `PaperObserverScreenAPI` — Sacudidas de cámara, tinte de pantalla y viñetas.
+- `PaperObserverAnimationAPI` — Desencadenar animaciones de Blockbench en los modelos de los jugadores.
+- `PaperObserverEnvironmentAPI` — Aplicar perfiles de entorno y densidad de la niebla.
+- `PaperObserverKeyboardAPI` — Consultar las teclas físicas que el jugador mantiene presionadas.
+
+---
+
+## Eventos C2S
+
+Observer dispara eventos de Bukkit cuando el cliente envía información al servidor. Todos están ubicados en `com.observer.paper.api.events` y `com.observer.paper.api.event`.
+
+### Eventos de Menú (En Desarrollo)
+- `MenuActionEvent`: Se dispara cuando un jugador realiza una acción dentro de un menú de Observer.
+- `MenuCloseEvent`: Se dispara cuando un jugador cierra un menú de Observer.
+
+### `PlayerKeyPressEvent`
+Se dispara cuando un jugador presiona físicamente una tecla.
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador. |
+| `getAsciiKey()`| `int` | El código ASCII de la tecla. |
+
+### `PlayerKeyReleaseEvent`
+Se dispara cuando un jugador suelta una tecla.
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador. |
+| `getAsciiKey()`| `int` | El código ASCII de la tecla. |
+
+### `PlayerKeyMatchEvent`
+Se dispara cuando se presiona correctamente una combinación definida en el servidor (`KeyAction`).
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador. |
+| `getAction()` | `KeyAction`| La acción detectada. |
+
+### `ObserverPlayerJumpEvent`
+Se dispara cuando el cliente inicia un salto.
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador que saltó. |
+
+### `ObserverPlayerSprintEvent`
+Se dispara cuando el estado de esprintar cambia.
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador. |
+| `isSprinting()`| `boolean`| Verdadero si comenzó a esprintar, falso si se detuvo. |
+
+### `ObserverPlayerSneakEvent`
+Se dispara cuando el estado de agacharse cambia.
+| Método | Retorno | Descripción |
+|---|---|---|
+| `getPlayer()` | `Player` | El jugador. |
+| `isSneaking()` | `boolean`| Verdadero si comenzó a agacharse, falso si se levantó. |
+
+---
+
+## Clases Base (Core)
+
+- `ComponentAlignment` — Los 9 anclajes de pantalla (`TOP_LEFT`, `CENTER`, `BOTTOM_RIGHT`, etc.)
+- `TextAlignment` — Cómo se alinea el texto dentro de su caja (`LEFT`, `CENTER`, `RIGHT`).
+- `SoundDefinition` — Clase constructora para configurar un sonido espacial (X, Y, Z, Pitch, Volumen).

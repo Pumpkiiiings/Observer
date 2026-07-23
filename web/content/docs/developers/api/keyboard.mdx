@@ -1,0 +1,154 @@
+---
+title: Keyboard
+description: Learn how to track and react to a player's physical key presses.
+---
+
+# Keyboard
+
+Observer allows you to track and react to a player's physical key presses. You can detect when a player presses or releases a specific key, or query their current keyboard state dynamically.
+
+## Events
+
+Observer fires several events when the client interacts with their keyboard.
+
+---
+
+### `PlayerKeyPressEvent`
+> Fired when a player presses down a physical key.
+
+`com.observer.paper.api.events.PlayerKeyPressEvent`
+
+**Signature**
+```java
+public class PlayerKeyPressEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who pressed the key.
+
+#### `getAsciiKey`
+```java
+public int getAsciiKey()
+```
+Returns: The raw ASCII byte code of the key.
+
+**Example**
+```java
+@EventHandler
+public void onKeyPress(PlayerKeyPressEvent event) {
+    if (event.getAsciiKey() == 87) { // 'W' key
+        event.getPlayer().sendMessage("You pressed W!");
+    }
+}
+```
+
+---
+
+### `PlayerKeyReleaseEvent`
+> Fired when a player releases a physical key.
+
+`com.observer.paper.api.events.PlayerKeyReleaseEvent`
+
+**Signature**
+```java
+public class PlayerKeyReleaseEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who released the key.
+
+#### `getAsciiKey`
+```java
+public int getAsciiKey()
+```
+Returns: The raw ASCII byte code of the key.
+
+---
+
+### `PlayerKeyMatchEvent`
+> Fired when a predefined server combination (`KeyAction`) is successfully pressed.
+
+`com.observer.paper.api.events.PlayerKeyMatchEvent`
+
+**Signature**
+```java
+public class PlayerKeyMatchEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who matched the action.
+
+#### `getAction`
+```java
+public KeyAction getAction()
+```
+Returns: The configured `KeyAction` enum or configuration block that was matched.
+
+---
+
+## Polling Key States
+
+Instead of listening to events, you can actively poll the keyboard state using `PaperObserverKeyboardAPI`.
+
+---
+
+### `PaperObserverKeyboardAPI`
+> Real-time keyboard polling without needing to listen to events.
+
+`com.observer.paper.api.PaperObserverKeyboardAPI`
+
+**Signature**
+```java
+public class PaperObserverKeyboardAPI
+```
+
+**Methods**
+
+#### `isKeyDown`
+```java
+public static boolean isKeyDown(Player player, int asciiKey)
+```
+Returns `true` if the specific ASCII key is currently being held down.
+
+#### `getPressedKeys`
+```java
+public static Set<Integer> getPressedKeys(Player player)
+```
+Returns a set of all ASCII byte codes currently pressed by the player.
+
+#### `flushKeys`
+```java
+public static void flushKeys(Player player)
+```
+Forces the server to forget all keys held by the player.
+
+**Example**
+```java
+import com.observer.paper.api.PaperObserverKeyboardAPI;
+
+// Check if a specific key is pressed right now
+if (PaperObserverKeyboardAPI.isKeyDown(player, 32)) {
+    // Player is holding Spacebar
+}
+
+// Get all keys currently held down
+Set<Integer> keys = PaperObserverKeyboardAPI.getPressedKeys(player);
+
+// Force release all keys virtually for a player
+PaperObserverKeyboardAPI.flushKeys(player);
+```

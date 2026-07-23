@@ -1,0 +1,36 @@
+---
+title: Introducción
+description: Aprende a configurar y ejecutar Observer en tu servidor.
+---
+
+# Observer para Administradores
+
+Bienvenido a la documentación de Observer para dueños de servidores (Owners).
+
+Observer es un plugin de servidor (Paper) emparejado con un mod de cliente (Fabric). Permite a los administradores y desarrolladores tener control directo sobre los efectos visuales del cliente, la interfaz HUD, el audio espacial y las entradas de teclado, superando las limitaciones estándar de Minecraft.
+
+## Requisitos
+
+- **Servidor**: Paper 1.21+ (Java 21)
+- **Cliente**: Fabric 1.21+ (Java 21)
+
+
+## Características
+
+- **Control de Pantalla y HUD** — Crea títulos dinámicos, renderiza ítems 3D en la pantalla, sacude la cámara o aplica tintes de color y viñetas en pantalla completa.
+- **Sobrescritura de Entorno** — Cambia dinámicamente el color del cielo, el color y la distancia de la niebla por cada jugador. Activa "Oscuridad Total" para deshabilitar la luz ambiental.
+- **Motor de Audio** — Reproduce sonidos personalizados globalmente o audios espaciales 3D perfectamente posicionados (requiere archivos `.ogg` en MONO).
+- **Rastreo de Teclado** — Rastreo en tiempo real de qué teclas físicas están presionando o manteniendo tus jugadores.
+- **Listo para Cinemáticas** — El conjunto de herramientas perfecto para combinar efectos y crear introducciones y eventos inmersivos.
+
+## Instalación
+
+1. Coloca el archivo `observer-paper-<version>.jar` en la carpeta `plugins/` de tu servidor.
+2. Inicia el servidor una vez para generar los archivos de configuración por defecto.
+3. Distribuye el `observer-fabric-<version>.jar` a tus jugadores (vía Discord, sitio web o un modpack en Modrinth).
+
+## Consideraciones Importantes
+
+- **Requisito Estricto**: Los jugadores *sin* el mod de cliente aún pueden unirse a tu servidor (a menos que uses un plugin de whitelist separado), pero las funciones de Observer fallarán silenciosamente para ellos.
+- **Resource Packs**: Observer depende de resource packs estándar. Si estás renderizando texturas de UI personalizadas o reproduciendo sonidos, asegúrate de que los jugadores descarguen tu resource pack del servidor.
+- **Rendimiento**: El sistema de paquetes de red está altamente optimizado. Las actualizaciones del HUD solo envían los datos delta, manteniendo el uso de ancho de banda bajo y los TPS estables.

@@ -1,0 +1,106 @@
+---
+title: Sonido
+description: Reproduce audios personalizados 2D y 3D espacial.
+---
+
+# Sonido
+
+Observer te permite reproducir efectos de sonido personalizados para los jugadores sin depender del comando `/playsound` de Vanilla. Puedes reproducir sonidos 2D estándar directamente en los oídos del jugador, o sonidos 3D espaciales que provienen de una ubicación específica en el mundo.
+
+<Callout type="warn">
+**Requisito de Audio Espacial (MONO)**
+
+Si quieres que tus sonidos sean espaciales (3D) en Minecraft, el archivo de audio `.ogg` en tu Resource Pack **debe ser exportado en canal MONO**. 
+
+Si el sonido está en ESTÉREO, Minecraft forzará su reproducción como un sonido 2D directamente en los oídos del jugador, rompiendo por completo el efecto espacial.
+</Callout>
+
+---
+
+## Sonidos 2D
+
+Los sonidos 2D se reproducen globalmente para el jugador a un volumen constante, independientemente de dónde se mueva o mire.
+
+### `ObserverAPI.playSound`
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+// Reproduce un efecto de sonido 2D personalizado
+ObserverAPI.playSound(player, "observer:ruido_miedo", 1.0f, 1.0f);
+```
+
+---
+
+## Sonidos 3D Espaciales
+
+Para reproducir sonidos que provienen de una coordenada específica, usa la clase `PaperObserverSoundAPI`.
+
+### `PaperObserverSoundAPI`
+> Reproducción de sonidos espaciales 3D y control.
+
+`com.observer.paper.api.PaperObserverSoundAPI`
+
+**Firma**
+```java
+public class PaperObserverSoundAPI
+```
+
+**Métodos**
+
+#### `playSpatialSound`
+```java
+public static void playSpatialSound(Player player, SoundDefinition sound)
+```
+Reproduce un sonido 3D posicionado usando el objeto constructor `SoundDefinition`.
+
+#### `stopSound`
+```java
+public static void stopSound(Player player, String soundId)
+```
+Fuerza al cliente a detener un sonido específico de inmediato.
+
+---
+
+### `SoundDefinition`
+> Clase constructora para configurar un sonido espacial.
+
+`com.observer.api.sound.SoundDefinition`
+
+**Firma**
+```java
+public class SoundDefinition
+```
+
+**Métodos**
+
+#### `builder`
+```java
+public static Builder builder(String soundId)
+```
+Inicia la construcción de una nueva definición de sonido.
+
+#### `position`
+```java
+public Builder position(double x, double y, double z)
+```
+Establece las coordenadas exactas de donde provendrá el sonido.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.PaperObserverSoundAPI;
+import com.observer.api.sound.SoundDefinition;
+
+Location loc = player.getLocation();
+
+// Crea la definición
+SoundDefinition sonido = SoundDefinition.builder("observer:ambiente_terror")
+    .position(loc.getX(), loc.getY(), loc.getZ())
+    .build();
+
+// Reprodúcelo
+PaperObserverSoundAPI.playSpatialSound(player, sonido);
+
+// Detenlo más tarde
+PaperObserverSoundAPI.stopSound(player, "observer:ambiente_terror");
+```

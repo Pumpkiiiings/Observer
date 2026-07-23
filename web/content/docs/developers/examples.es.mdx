@@ -1,0 +1,200 @@
+---
+title: Ejemplos Prácticos
+description: Ejemplos listos para producción combinando múltiples APIs de Observer.
+---
+
+# Ejemplos Prácticos
+
+Al crear plugins para un servidor en producción, rara vez usarás una sola característica de Observer de forma aislada. Las mejores experiencias se logran combinando sonidos, efectos visuales y lógica de manera óptima.
+
+A continuación encontrarás tres ejemplos altamente detallados, listos para producción, que demuestran cómo usar Observer correctamente.
+
+---
+
+## 1. El Susto (Jump Scare) de Mapa de Terror
+
+En los mapas de terror, un clásico es doblar una esquina y asustarse repentinamente por un ruido fuerte, una pantalla roja y una cámara temblando.
+
+Este ejemplo dispara un susto localizado cuando un jugador pisa un bloque específico. Combina la **Sound API** (para el grito), la **Screen API** (para el impacto visual) y la **Environment API** (para cegar al jugador).
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverSoundAPI;
+import com.observer.paper.api.PaperObserverScreenAPI;
+import com.observer.api.sound.SoundDefinition;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+public class JumpScareTrigger implements Listener {
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        
+        // 1. ¡SIEMPRE verifica que el jugador tenga el mod antes de enviar paquetes!
+        if (!ObserverAPI.isObserverPlayer(player)) {
+            return; 
+        }
+
+        Location to = event.getTo();
+        
+        // 2. Comprueba si pisó nuestro bloque trampa (ej. una placa de presión de piedra)
+        if (to != null && to.getBlock().getType() == Material.STONE_PRESSURE_PLATE) {
+            
+            // 3. Reproduce un grito espacial fuerte originado en la ubicación del jugador
+            SoundDefinition grito = SoundDefinition.builder("miplugin:grito_01")
+                .position(to.getX(), to.getY(), to.getZ())
+                .build();
+            PaperObserverSoundAPI.playSpatialSound(player, grito);
+
+            // 4. Aplica una fuerte sacudida de cámara por 1.5 segundos (30 ticks)
+            PaperObserverScreenAPI.playScreenshake(player, 1.5f, 30);
+            
+            // 5. Muestra una viñeta roja sangre en los bordes de la pantalla
+            PaperObserverScreenAPI.playScreenVignette(player, 255, 0, 0, 0.9f, 30);
+            
+            // 6. Hunde al jugador temporalmente en una niebla densa para cegarlo
+            ObserverAPI.startDenseFog(player, 1.0f, 3.0f, 1.0f);
+            
+            // Limpia la niebla después de 2 segundos para que pueda volver a ver
+            org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+                if (player.isOnline()) {
+                    ObserverAPI.stopDenseFog(player);
+                }
+            }, 40L);
+        }
+    }
+}
+```
+
+---
+
+## 2. Sistema de Energía (Stamina) de RPG
+
+En un RPG, es posible que quieras que un jugador mantenga presionada una tecla para cargar un ataque, drenando su energía mientras lo hace.
+
+Este ejemplo usa la **Keyboard API** para consultar el estado de la tecla sin saturar de eventos, la **Observer API** base para dibujar y actualizar la barra de energía eficientemente, y la **Animation API** para el impacto visual.
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverKeyboardAPI;
+import com.observer.paper.api.PaperObserverAnimationAPI;
+import com.observer.api.model.ComponentAlignment;
+import com.observer.api.model.TextAlignment;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import java.util.HashMap;
+import java.util.UUID;
+
+public class SistemaEnergia extends BukkitRunnable {
+
+    // Rastrear la energía y el último valor dibujado para evitar spam de red
+    private final HashMap<UUID, Integer> energiaMap = new HashMap<>();
+    private final HashMap<UUID, Integer> ultimaEnergiaDibujada = new HashMap<>();
+    private final int MAX_ENERGIA = 100;
+    
+    // Código ASCII para la tecla 'C'
+    private final int TECLA_CAST = 67; 
+
+    @Override
+    public void run() {
+        for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
+            if (!ObserverAPI.isObserverPlayer(player)) continue;
+
+            UUID id = player.getUniqueId();
+            int energiaActual = energiaMap.getOrDefault(id, MAX_ENERGIA);
+
+            // 1. Consultar el teclado: ¿El jugador mantiene presionada la 'C'?
+            if (PaperObserverKeyboardAPI.isKeyDown(player, TECLA_CAST)) {
+                if (energiaActual > 0) {
+                    energiaActual -= 2; // Drenar energía
+                }
+            } else {
+                if (energiaActual < MAX_ENERGIA) {
+                    energiaActual += 1; // Regenerar energía
+                }
+            }
+            
+            energiaMap.put(id, energiaActual);
+
+            // 2. OPTIMIZACIÓN DE RED: Solo actualiza el HUD si el valor realmente cambió
+            int dibujadoPrevio = ultimaEnergiaDibujada.getOrDefault(id, -1);
+            if (energiaActual != dibujadoPrevio) {
+                
+                String textoHud = "<blue>Energía: " + energiaActual + "</blue>";
+                
+                if (dibujadoPrevio == -1) {
+                    // Es la primera vez que dibujamos el HUD
+                    ObserverAPI.createText(player, "rpg:barra_energia", textoHud, 
+                        ComponentAlignment.BOTTOM_LEFT, 10, -10, 1.0f, TextAlignment.LEFT);
+                } else {
+                    // Actualizando el HUD existente (mucho más rápido que recrearlo)
+                    ObserverAPI.updateText(player, "rpg:barra_energia", textoHud);
+                }
+                ultimaEnergiaDibujada.put(id, energiaActual);
+            }
+        }
+    }
+}
+```
+
+---
+
+## 3. Introducción Cinemática al Servidor
+
+Las primeras impresiones importan. Cuando un jugador entra al servidor, quieres recibirlo con una pantalla negra, un título personalizado y música antes de revelar el mundo.
+
+Este ejemplo destaca la regla de oro **Retraso de Handshake**. No puedes enviar paquetes de Observer el mismo milisegundo en que un jugador entra, ya que el cliente necesita un momento para cargar el mundo y establecer la conexión con el mod.
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverEnvironmentAPI;
+import com.observer.api.model.ComponentAlignment;
+import com.observer.api.model.TextAlignment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+public class IntroduccionServidor implements Listener {
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        // 1. RETRASO DE HANDSHAKE: Espera 20 ticks (1 segundo) antes de interactuar
+        org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+            
+            // Verifica si realmente tienen el mod después del retraso
+            if (ObserverAPI.isObserverPlayer(player)) {
+                
+                // 2. Oculta el mundo de inmediato usando True Darkness
+                PaperObserverEnvironmentAPI.setTrueDarkness(player, true);
+                
+                // 3. Reproduce música de intro (Sonido 2D)
+                ObserverAPI.playSound(player, "servidor:intro_epica", 1.0f, 1.0f);
+                
+                // 4. Muestra un título de bienvenida masivo
+                ObserverAPI.createText(player, "intro_titulo", "<gold><bold>BIENVENIDO A OBLIVION</bold></gold>", 
+                    ComponentAlignment.CENTER, 0, -20, 3.0f, TextAlignment.CENTER);
+                    
+                // 5. Programa la revelación del mundo 5 segundos después
+                org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+                    if (player.isOnline()) {
+                        // Restaura las luces del entorno
+                        PaperObserverEnvironmentAPI.setTrueDarkness(player, false);
+                        
+                        // Elimina el texto gigante
+                        ObserverAPI.removeComponent(player, "intro_titulo");
+                    }
+                }, 100L); // 5 segundos
+            }
+            
+        }, 20L); // 1 segundo de retraso
+    }
+}
+```

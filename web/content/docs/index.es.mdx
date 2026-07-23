@@ -1,0 +1,37 @@
+---
+title: Inicio
+description: Bienvenido a la documentación oficial de Observer.
+---
+
+# ¿Qué es Observer?
+
+Observer es un poderoso framework cliente-servidor para Minecraft diseñado para romper las barreras del desarrollo tradicional de plugins. 
+
+Mientras que los plugins normales están limitados a lo que el cliente de Minecraft original (vanilla) puede mostrar (como menús en inventarios, ActionBar y BossBar), **Observer permite a los servidores controlar directamente la experiencia visual y auditiva del cliente**.
+
+## ¿Para qué sirve?
+
+Al combinar el plugin de servidor (`observer-paper`) y el mod de cliente (`observer-fabric`), puedes crear experiencias increíblemente inmersivas:
+
+- **Interfaces Gráficas (HUD):** Dibuja texto personalizado, ítems 3D o colores planos directamente en la pantalla de los jugadores, sin usar la anticuada ActionBar.
+- **Audio Espacial 3D:** Reproduce efectos de sonido posicionales de forma precisa, ideal para mapas de terror o indicadores direccionales.
+- **Ambiente y Entorno:** Sobrescribe el color del cielo, el color de la niebla, o habilita la "Oscuridad Total" (True Darkness) para eliminar la luz ambiental y crear atmósferas terroríficas o místicas.
+- **Detección de Teclado:** Averigua exactamente qué teclas físicas está presionando un jugador (W, A, S, D, Espacio, etc.) sin depender de eventos de movimiento vagos.
+- **Efectos de Pantalla:** Sacude la cámara (Screen Shake) o aplica tintes rojos cuando un jugador recibe daño.
+
+## Compatibilidad
+
+Observer ha sido probado exhaustivamente en diversos entornos para garantizar su estabilidad:
+
+- **Probado y compatible con**: Modpacks de optimización que incluyan el mod **Sodium** (desde la versión 1.21.4 hasta la 26.2).
+- **Incompatibilidades conocidas hasta ahora**: Lunar Client (no es compatible actualmente).
+- **No se ha probado con**: El nuevo motor de gráficos Vulkan.
+- **Sin soporte para**: NeoForge o Forge (solo soporte nativo para Fabric).
+
+## ¿Por dónde empiezo?
+
+La documentación está dividida en tres categorías principales, dependiendo de tu rol:
+
+1. **[Jugadores](/docs/players)**: Si solo quieres jugar en un servidor que usa Observer, aquí encontrarás cómo instalar el mod en tu cliente.
+2. **[Administradores](/docs/owners)**: Si eres dueño de un servidor y quieres instalar Observer, configurar sus opciones o probar comandos de depuración.
+3. **[Desarrolladores](/docs/developers)**: Si eres un programador de Java y quieres escribir plugins de Paper que aprovechen la API de Observer para crear características únicas en tu servidor.

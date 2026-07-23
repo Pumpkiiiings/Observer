@@ -1,0 +1,102 @@
+---
+title: Entorno
+description: Controla la distancia de la niebla, color del cielo y la luz ambiental.
+---
+
+# Entorno
+
+Observer te permite manipular la iluminación, colores del entorno y la densidad de la niebla de forma dinámica por cada jugador.
+
+---
+
+### `PaperObserverEnvironmentAPI`
+> Gestión avanzada del entorno.
+
+`com.observer.paper.api.PaperObserverEnvironmentAPI`
+
+**Firma**
+```java
+public class PaperObserverEnvironmentAPI
+```
+
+**Métodos**
+
+#### `setSkyColor`
+```java
+public static void setSkyColor(Player player, int rgbColor)
+```
+Sobrescribe el color del cielo. Ej. `0xFF0000` para rojo.
+
+#### `setFogColor`
+```java
+public static void setFogColor(Player player, int rgbColor)
+```
+Sobrescribe el color de la niebla.
+
+#### `setFogDensity`
+```java
+public static void setFogDensity(Player player, float density)
+```
+Calcula y modifica automáticamente la distancia de renderizado de la niebla basado en una densidad. Una densidad de `0.5f` representa niebla muy espesa.
+
+#### `setTrueDarkness`
+```java
+public static void setTrueDarkness(Player player, boolean enabled)
+```
+Activa o desactiva el renderizado de la luz ambiental (True Darkness), provocando que las zonas sin luz sean completamente oscuras.
+
+#### `applyProfile`
+```java
+public static void applyProfile(Player player, EnvironmentProfile profile)
+```
+Aplica configuraciones masivas del cielo, niebla e iluminación de una sola vez usando un perfil.
+
+#### `resetEnvironment`
+```java
+public static void resetEnvironment(Player player)
+```
+Reinicia todos los colores de cielo, niebla y luces a su estado por defecto Vanilla.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.PaperObserverEnvironmentAPI;
+
+PaperObserverEnvironmentAPI.setTrueDarkness(player, true);
+PaperObserverEnvironmentAPI.setFogColor(player, 0xFF0000); // Rojo
+PaperObserverEnvironmentAPI.setFogDensity(player, 0.5f);
+```
+
+---
+
+### `ObserverAPI.startDenseFog`
+
+Si deseas tener control manual exacto sobre los bloques de inicio y fin de la niebla en lugar de usar matemáticas de densidad, puedes usar la API base:
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+// Inicia una niebla que comienza a 2 bloques de distancia y termina a los 10 bloques, con 100% de grosor
+ObserverAPI.startDenseFog(player, 2.0f, 10.0f, 1.0f);
+
+// Restaura la distancia de la niebla normal Vanilla
+ObserverAPI.stopDenseFog(player);
+```
+
+---
+
+### `EnvironmentProfile`
+
+Si necesitas aplicar muchos cambios a la vez (como al entrar a un bioma custom), puedes usar `EnvironmentProfile` para agruparlos:
+
+```java
+import com.observer.api.environment.EnvironmentProfile;
+
+EnvironmentProfile perfilInfernal = EnvironmentProfile.builder()
+    .skyColor(255, 0, 0)
+    .fogColor(100, 0, 0)
+    .fogDensity(0.2f)
+    .trueDarkness(true)
+    .build();
+
+PaperObserverEnvironmentAPI.applyProfile(player, perfilInfernal);
+```

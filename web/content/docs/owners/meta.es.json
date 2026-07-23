@@ -1,0 +1,4 @@
+{
+  "title": "Administradores",
+  "pages": ["index", "commands", "config"]
+}

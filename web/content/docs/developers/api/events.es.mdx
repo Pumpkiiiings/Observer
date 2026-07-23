@@ -1,0 +1,113 @@
+---
+title: Eventos
+description: Aprende sobre los eventos C2S disparados por el cliente de Observer.
+---
+
+# Eventos
+
+Observer dispara eventos de Bukkit siempre que el cliente envía datos al servidor. Estos eventos te permiten detectar cuándo un jugador salta, esprinta, se agacha o interactúa con el mod de otras maneras.
+
+Todos los eventos residen en el paquete `com.observer.paper.api.events` y heredan de `ObserverPlayerEvent`.
+
+---
+
+### `ObserverPlayerJumpEvent`
+> Se dispara cuando el cliente inicia un salto.
+
+`com.observer.paper.api.events.ObserverPlayerJumpEvent`
+
+**Firma**
+```java
+public class ObserverPlayerJumpEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador que saltó.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onPlayerJump(ObserverPlayerJumpEvent event) {
+    Player player = event.getPlayer();
+    player.sendMessage("¡Has saltado!");
+}
+```
+
+---
+
+### `ObserverPlayerSprintEvent`
+> Se dispara cuando cambia el estado de esprintar de un jugador.
+
+`com.observer.paper.api.events.ObserverPlayerSprintEvent`
+
+**Firma**
+```java
+public class ObserverPlayerSprintEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `isSprinting`
+```java
+public boolean isSprinting()
+```
+Retorna: `true` si comenzó a esprintar, `false` si se detuvo.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onSprint(ObserverPlayerSprintEvent event) {
+    if (event.isSprinting()) {
+        event.getPlayer().sendMessage("¡Empezaste a correr!");
+    } else {
+        event.getPlayer().sendMessage("Dejaste de correr.");
+    }
+}
+```
+
+---
+
+### `ObserverPlayerSneakEvent`
+> Se dispara cuando cambia el estado de agacharse de un jugador.
+
+`com.observer.paper.api.events.ObserverPlayerSneakEvent`
+
+**Firma**
+```java
+public class ObserverPlayerSneakEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `isSneaking`
+```java
+public boolean isSneaking()
+```
+Retorna: `true` si comenzó a agacharse, `false` si se levantó.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onSneak(ObserverPlayerSneakEvent event) {
+    if (event.isSneaking()) {
+        // Ejecutar animación personalizada de agacharse
+    }
+}
+```

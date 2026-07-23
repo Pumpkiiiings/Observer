@@ -1,0 +1,65 @@
+---
+title: Configuración
+description: Detalles sobre los archivos de configuración de Observer y canales de red.
+---
+
+# Configuración
+
+Observer funciona con una configuración mínima requerida por defecto. La mayoría de los ajustes son únicamente con fines de depuración (debugging).
+
+## Estructura de Directorios
+
+Cuando inicias tu servidor, Observer genera la siguiente estructura en `plugins/ObserverPaper`:
+
+```text
+plugins/
+└── ObserverPaper/
+    ├── config.yml
+    └── layouts/
+```
+
+- `config.yml`: El archivo de configuración principal con ajustes de debug.
+- `layouts/`: (En Desarrollo) Contendrá definiciones de layouts en JSON para la próxima reescritura de la API de Menús.
+
+## config.yml
+
+El archivo de configuración se utiliza principalmente para activar el registro de depuración. Si tienes problemas o estás programando un plugin que usa Observer, estos *toggles* imprimirán información detallada en la consola de tu servidor.
+
+```yaml
+# Observer Configuration
+
+debug:
+  # Massive debug logging for keyboard detection. Logs every packet sent and received.
+  keyboard: true
+  # Toggles STAGE-1 and STAGE-2 debug logging for the environment system
+  environment: false
+  # Toggles [DEBUG-SERVER] network packet logging (bytes sent per channel)
+  network: false
+  # Toggles screen effect debug logging
+  screen-effects: false
+```
+
+### Desglose de Claves
+
+| Clave | Tipo | Por Defecto | Descripción |
+|---|---|---|---|
+| `debug.keyboard` | Boolean | `true` | Registra cada paquete de presión/liberación de teclas. *Altamente recomendado APAGAR en producción.* |
+| `debug.environment` | Boolean | `false` | Registra la aplicación en el servidor de cambios de cielo, niebla y oscuridad. |
+| `debug.network` | Boolean | `false` | Registro extremadamente detallado (y ruidoso) de los bytes crudos enviados por red. |
+| `debug.screen-effects` | Boolean | `false` | Registra cuándo se disparan las sacudidas de cámara o viñetas. |
+
+---
+
+## Canales de Red (Network)
+
+Si tu servidor corre detrás de un proxy estricto (como Velocity o BungeeCord) que bloquea canales de mensajes desconocidos, debes permitir explícitamente los canales personalizados de Observer.
+
+Observer registra y utiliza los siguientes canales:
+
+| Nombre del Canal | Dirección | Propósito |
+|---|---|---|
+| `observer:main` | S2C | El canal principal que usa el servidor para enviar actualizaciones del HUD, audio y efectos. |
+| `observer:keys` | C2S | Usado por el cliente para avisarle al servidor cuándo se presiona o suelta una tecla. |
+| `observer:handshake`| S2C / C2S | El protocolo de 2 vías usado al iniciar sesión para verificar que el jugador tiene el mod. |
+
+*Nota: Estos canales se registran automáticamente. No se requiere configuración manual dentro de Observer.*

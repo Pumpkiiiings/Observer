@@ -1,0 +1,126 @@
+---
+title: Pantalla y HUD
+description: Dibuja texto, ítems y efectos de post-procesamiento en la pantalla.
+---
+
+# Pantalla y HUD
+
+Observer te permite renderizar elementos del HUD completamente personalizados en la pantalla del jugador, y aplicar efectos visuales de post-procesamiento como sacudidas de cámara o filtros de color.
+
+## Renderizado de HUD
+
+La API base de Observer provee métodos directos para dibujar componentes en la pantalla.
+
+### `ObserverAPI`
+
+**Métodos**
+
+#### `createText`
+```java
+public static void createText(Player player, String id, String content, ComponentAlignment alignment, int offsetX, int offsetY, float scale, TextAlignment textAlignment)
+```
+Crea un componente de texto interactivo en la pantalla del jugador.
+
+#### `createItem`
+```java
+public static void createItem(Player player, String id, org.bukkit.inventory.ItemStack item, ComponentAlignment alignment, int offsetX, int offsetY, float scale)
+```
+Renderiza un ítem 3D en la pantalla del jugador.
+
+#### `updateText`
+```java
+public static void updateText(Player player, String id, String newContent)
+```
+Actualiza el contenido de un componente de texto de forma dinámica sin reconstruir el layout.
+
+#### `removeComponent`
+```java
+public static void removeComponent(Player player, String id)
+```
+Elimina un componente específico de la pantalla usando su ID.
+
+#### `clearHUD`
+```java
+public static void clearHUD(Player player)
+```
+Limpia todo el HUD de Observer para el jugador dado.
+
+---
+
+### Alineaciones
+
+Al crear componentes de HUD, debes especificar cómo se alinearán.
+
+#### `ComponentAlignment`
+Define el punto de anclaje en la pantalla del jugador. `offsetX` y `offsetY` se aplican relativos a este anclaje.
+- `TOP_LEFT`
+- `TOP_CENTER`
+- `TOP_RIGHT`
+- `CENTER_LEFT`
+- `CENTER`
+- `CENTER_RIGHT`
+- `BOTTOM_LEFT`
+- `BOTTOM_CENTER`
+- `BOTTOM_RIGHT`
+
+#### `TextAlignment`
+Define cómo se justifica el texto dentro de su propia caja invisible.
+- `LEFT`
+- `CENTER`
+- `RIGHT`
+
+**Ejemplo: Título y Subtítulo**
+```java
+ObserverAPI.createText(player, "nivel_titulo", "<gold>¡SUBISTE DE NIVEL!</gold>", 
+    ComponentAlignment.TOP_CENTER, 0, 20, 2.0f, TextAlignment.CENTER);
+
+ObserverAPI.createText(player, "nivel_sub", "<white>Llegaste al nivel 10</white>", 
+    ComponentAlignment.TOP_CENTER, 0, 40, 1.0f, TextAlignment.CENTER);
+```
+
+---
+
+## Efectos de Post-Procesamiento
+
+Para efectos visuales en la cámara, utiliza la clase `PaperObserverScreenAPI`.
+
+### `PaperObserverScreenAPI`
+> Efectos de post-procesamiento visual y manipulación de cámara.
+
+`com.observer.paper.api.PaperObserverScreenAPI`
+
+**Firma**
+```java
+public class PaperObserverScreenAPI
+```
+
+**Métodos**
+
+#### `playScreenshake`
+```java
+public static void playScreenshake(Player player, float intensity, int durationTicks)
+```
+Aplica una sacudida de cámara por un tiempo específico. 
+
+#### `playScreenTint`
+```java
+public static void playScreenTint(Player player, int r, int g, int b, float alpha, int durationTicks)
+```
+Aplica un tinte de color a la pantalla completa.
+
+#### `playScreenVignette`
+```java
+public static void playScreenVignette(Player player, int r, int g, int b, float alpha, int durationTicks)
+```
+Aplica una viñeta coloreada en los bordes de la pantalla.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.PaperObserverScreenAPI;
+
+// Sacudida de cámara fuerte
+PaperObserverScreenAPI.playScreenshake(player, 1.0f, 20);
+
+// Viñeta roja (sangre) en los bordes de la pantalla
+PaperObserverScreenAPI.playScreenVignette(player, 255, 0, 0, 0.8f, 60);
+```

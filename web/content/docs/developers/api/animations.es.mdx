@@ -1,0 +1,57 @@
+---
+title: Animaciones
+description: Reproduce animaciones personalizadas de Blockbench en los jugadores.
+---
+
+# Animaciones
+
+Observer tiene soporte incorporado para disparar animaciones de Blockbench en los modelos de los jugadores.
+
+<Callout type="info">
+**Dependencia Requerida**
+
+El soporte de animaciones depende del increíble mod [Player Animator](https://modrinth.com/mod/player-animation-library) de KosmX. 
+¡Asegúrate de que tus jugadores tengan este mod instalado en su cliente junto con Observer para que las animaciones funcionen!
+</Callout>
+
+---
+
+### `PaperObserverAnimationAPI`
+> Dispara animaciones de Blockbench en los modelos de los jugadores.
+
+`com.observer.paper.api.PaperObserverAnimationAPI`
+
+**Firma**
+```java
+public class PaperObserverAnimationAPI
+```
+
+**Métodos**
+
+#### `playAnimation`
+```java
+public static void playAnimation(Player viewer, Player target, String animationName)
+```
+Reproduce una animación en el jugador `target`, siendo visible para el `viewer`.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.PaperObserverAnimationAPI;
+import com.observer.paper.api.events.ObserverPlayerSprintEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+public class AnimationListener implements Listener {
+
+    @EventHandler
+    public void onSprint(ObserverPlayerSprintEvent event) {
+        if (event.isSprinting()) {
+            // Reproduce la animación "naruto_run" en el jugador que empezó a correr,
+            // y muéstrasela a todos los jugadores en su mundo.
+            for (Player espectador : event.getPlayer().getWorld().getPlayers()) {
+                PaperObserverAnimationAPI.playAnimation(espectador, event.getPlayer(), "naruto_run");
+            }
+        }
+    }
+}
+```

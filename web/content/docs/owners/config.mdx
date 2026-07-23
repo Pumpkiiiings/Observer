@@ -1,0 +1,65 @@
+---
+title: Configuration
+description: Details on Observer's configuration files and network channels.
+---
+
+# Configuration
+
+Observer operates with minimal required configuration out of the box. Most settings are for debugging purposes.
+
+## Directory Structure
+
+When you start your server, Observer generates the following structure in `plugins/ObserverPaper`:
+
+```text
+plugins/
+└── ObserverPaper/
+    ├── config.yml
+    └── layouts/
+```
+
+- `config.yml`: The main configuration file holding debug settings.
+- `layouts/`: (Work in Progress) Will hold JSON layout definitions for the upcoming Menu API rewrite.
+
+## config.yml
+
+The configuration file is primarily used to toggle debug logging. If you are experiencing issues or developing a plugin that hooks into Observer, these toggles will print verbose information to your server console.
+
+```yaml
+# Observer Configuration
+
+debug:
+  # Massive debug logging for keyboard detection. Logs every packet sent and received.
+  keyboard: true
+  # Toggles STAGE-1 and STAGE-2 debug logging for the environment system
+  environment: false
+  # Toggles [DEBUG-SERVER] network packet logging (bytes sent per channel)
+  network: false
+  # Toggles screen effect debug logging
+  screen-effects: false
+```
+
+### Key Breakdown
+
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `debug.keyboard` | Boolean | `true` | Logs every single C2S key press/release packet. *Highly recommended to turn OFF in production.* |
+| `debug.environment` | Boolean | `false` | Logs server-side application of sky, fog, and darkness state changes. |
+| `debug.network` | Boolean | `false` | Extremely verbose logging of raw bytes sent over payload channels. |
+| `debug.screen-effects` | Boolean | `false` | Logs when screenshakes or vignettes are triggered. |
+
+---
+
+## Network Channels
+
+If your server runs behind a strict proxy (like Velocity or BungeeCord) that blocks unknown plugin messaging channels, you must explicitly allow Observer's custom payload channels.
+
+Observer registers and uses the following channels:
+
+| Channel Name | Direction | Purpose |
+|---|---|---|
+| `observer:main` | S2C | The primary channel used by the server to send HUD updates, audio, and visual effects to the client. |
+| `observer:keys` | C2S | Used by the client to tell the server when a physical key has been pressed or released. |
+| `observer:handshake` | S2C / C2S | The 2-way protocol used on login to verify the player has the Observer mod installed. |
+
+*Note: These channels are registered automatically. No manual configuration is needed within Observer itself.*

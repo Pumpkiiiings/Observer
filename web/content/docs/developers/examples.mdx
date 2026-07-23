@@ -1,0 +1,200 @@
+---
+title: Real World Examples
+description: Production-ready examples combining multiple Observer APIs.
+---
+
+# Real World Examples
+
+When building plugins for a production server, you rarely use just one feature of Observer in isolation. The best experiences are created by combining sounds, visual effects, and logic optimally.
+
+Below are three highly detailed, production-ready examples that demonstrate how to use Observer properly.
+
+---
+
+## 1. The Horror Map Jump Scare
+
+In horror maps, a classic trope is walking past a corner and suddenly getting scared by a loud noise, a red screen, and a shaking camera.
+
+This example triggers a localized jump scare when a player steps on a specific block. It combines the **Sound API** (for the scream), the **Screen API** (for the visual impact), and the **Environment API** (to blind the player).
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverSoundAPI;
+import com.observer.paper.api.PaperObserverScreenAPI;
+import com.observer.api.sound.SoundDefinition;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+
+public class JumpScareTrigger implements Listener {
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        
+        // 1. ALWAYS verify the player has the mod installed before sending payloads!
+        if (!ObserverAPI.isObserverPlayer(player)) {
+            return; 
+        }
+
+        Location to = event.getTo();
+        
+        // 2. Check if they stepped on our trigger block (e.g., a specific pressure plate)
+        if (to != null && to.getBlock().getType() == Material.STONE_PRESSURE_PLATE) {
+            
+            // 3. Play a loud spatial scream originating from the player's location
+            SoundDefinition scream = SoundDefinition.builder("miplugin:scream_01")
+                .position(to.getX(), to.getY(), to.getZ())
+                .build();
+            PaperObserverSoundAPI.playSpatialSound(player, scream);
+
+            // 4. Apply a heavy screen shake for 1.5 seconds (30 ticks)
+            PaperObserverScreenAPI.playScreenshake(player, 1.5f, 30);
+            
+            // 5. Flash a blood-red vignette on the edges of the screen
+            PaperObserverScreenAPI.playScreenVignette(player, 255, 0, 0, 0.9f, 30);
+            
+            // 6. Plunge the player into dense fog temporarily to blind them
+            ObserverAPI.startDenseFog(player, 1.0f, 3.0f, 1.0f);
+            
+            // Clean up the fog after 2 seconds so they can see again
+            org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+                if (player.isOnline()) {
+                    ObserverAPI.stopDenseFog(player);
+                }
+            }, 40L);
+        }
+    }
+}
+```
+
+---
+
+## 2. RPG Stamina & Ability System
+
+In an RPG, you might want a player to hold a key to charge up an attack, draining their stamina while they hold it, and then playing an animation when they release it.
+
+This example uses the **Keyboard API** to poll the key state without spamming events, the base **Observer API** to draw and update the stamina bar efficiently, and the **Animation API** for the visual payoff.
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverKeyboardAPI;
+import com.observer.paper.api.PaperObserverAnimationAPI;
+import com.observer.api.model.ComponentAlignment;
+import com.observer.api.model.TextAlignment;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import java.util.HashMap;
+import java.util.UUID;
+
+public class StaminaSystem extends BukkitRunnable {
+
+    // Keep track of player stamina and their last drawn stamina to avoid network spam
+    private final HashMap<UUID, Integer> staminaMap = new HashMap<>();
+    private final HashMap<UUID, Integer> lastDrawnStamina = new HashMap<>();
+    private final int MAX_STAMINA = 100;
+    
+    // ASCII for the 'C' key
+    private final int CAST_KEY = 67; 
+
+    @Override
+    public void run() {
+        for (Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
+            if (!ObserverAPI.isObserverPlayer(player)) continue;
+
+            UUID id = player.getUniqueId();
+            int currentStamina = staminaMap.getOrDefault(id, MAX_STAMINA);
+
+            // 1. Poll the keyboard: Is the player holding 'C'?
+            if (PaperObserverKeyboardAPI.isKeyDown(player, CAST_KEY)) {
+                if (currentStamina > 0) {
+                    currentStamina -= 2; // Drain stamina
+                }
+            } else {
+                if (currentStamina < MAX_STAMINA) {
+                    currentStamina += 1; // Regenerate stamina
+                }
+            }
+            
+            staminaMap.put(id, currentStamina);
+
+            // 2. NETWORK OPTIMIZATION: Only update the HUD if the value actually changed
+            int lastDrawn = lastDrawnStamina.getOrDefault(id, -1);
+            if (currentStamina != lastDrawn) {
+                
+                String hudText = "<blue>Stamina: " + currentStamina + "</blue>";
+                
+                if (lastDrawn == -1) {
+                    // First time drawing the HUD
+                    ObserverAPI.createText(player, "rpg:stamina_bar", hudText, 
+                        ComponentAlignment.BOTTOM_LEFT, 10, -10, 1.0f, TextAlignment.LEFT);
+                } else {
+                    // Updating existing HUD (much faster than recreating it)
+                    ObserverAPI.updateText(player, "rpg:stamina_bar", hudText);
+                }
+                lastDrawnStamina.put(id, currentStamina);
+            }
+        }
+    }
+}
+```
+
+---
+
+## 3. Cinematic Server Intro
+
+First impressions matter. When a player joins the server, you want to welcome them with a black screen, a custom title, and eerie music before revealing the world.
+
+This example highlights the **Handshake Delay** best practice. You cannot send Observer packets the exact millisecond a player joins, as the client needs a moment to load the world and establish the Observer handshake.
+
+```java
+import com.observer.paper.api.ObserverAPI;
+import com.observer.paper.api.PaperObserverEnvironmentAPI;
+import com.observer.api.model.ComponentAlignment;
+import com.observer.api.model.TextAlignment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+public class ServerIntro implements Listener {
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+
+        // 1. HANDSHAKE DELAY: Wait 20 ticks (1 second) before interacting with the Observer API
+        org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+            
+            // Check if they actually have the mod after the delay
+            if (ObserverAPI.isObserverPlayer(player)) {
+                
+                // 2. Hide the world immediately using True Darkness
+                PaperObserverEnvironmentAPI.setTrueDarkness(player, true);
+                
+                // 3. Play intro music (2D sound)
+                ObserverAPI.playSound(player, "server:epic_intro", 1.0f, 1.0f);
+                
+                // 4. Show a massive welcome title
+                ObserverAPI.createText(player, "intro_title", "<gold><bold>WELCOME TO OBLIVION</bold></gold>", 
+                    ComponentAlignment.CENTER, 0, -20, 3.0f, TextAlignment.CENTER);
+                    
+                // 5. Schedule the reveal 5 seconds later
+                org.bukkit.Bukkit.getScheduler().runTaskLater(MiPlugin.getInstance(), () -> {
+                    if (player.isOnline()) {
+                        // Restore the environment lights
+                        PaperObserverEnvironmentAPI.setTrueDarkness(player, false);
+                        
+                        // Remove the giant text
+                        ObserverAPI.removeComponent(player, "intro_title");
+                    }
+                }, 100L); // 5 seconds
+            }
+            
+        }, 20L); // 1 second handshake delay
+    }
+}
+```

@@ -1,0 +1,106 @@
+---
+title: Sound
+description: Play custom 2D and spatial 3D audio.
+---
+
+# Sound
+
+Observer allows you to play custom sound effects to players without relying on the vanilla `/playsound` command. You can play standard 2D sounds directly into the player's ears, or spatial 3D sounds originating from a specific location in the world.
+
+<Callout type="warn">
+**Spatial Audio Requirement (MONO)**
+
+If you want your sounds to be spatial (3D) in Minecraft, the `.ogg` audio file in your Resource Pack **must be exported in MONO channel**. 
+
+If the sound is in STEREO, Minecraft will forcefully play it as a 2D sound directly in the player's ears, completely breaking the spatial effect.
+</Callout>
+
+---
+
+## 2D Sounds
+
+2D sounds play globally for the player at a constant volume, regardless of where they move or look.
+
+### `ObserverAPI.playSound`
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+// Play a custom 2D sound effect
+ObserverAPI.playSound(player, "observer:scary_noise", 1.0f, 1.0f);
+```
+
+---
+
+## 3D Spatial Sounds
+
+To play sounds that come from a specific coordinate, use the `PaperObserverSoundAPI`.
+
+### `PaperObserverSoundAPI`
+> Spatial 3D sound playback and lifecycle management.
+
+`com.observer.paper.api.PaperObserverSoundAPI`
+
+**Signature**
+```java
+public class PaperObserverSoundAPI
+```
+
+**Methods**
+
+#### `playSpatialSound`
+```java
+public static void playSpatialSound(Player player, SoundDefinition sound)
+```
+Plays a 3D positioned sound using a `SoundDefinition` builder object.
+
+#### `stopSound`
+```java
+public static void stopSound(Player player, String soundId)
+```
+Forces the client to stop playing a specific sound instantly.
+
+---
+
+### `SoundDefinition`
+> Builder class for configuring spatial sounds.
+
+`com.observer.api.sound.SoundDefinition`
+
+**Signature**
+```java
+public class SoundDefinition
+```
+
+**Methods**
+
+#### `builder`
+```java
+public static Builder builder(String soundId)
+```
+Starts building a new sound definition.
+
+#### `position`
+```java
+public Builder position(double x, double y, double z)
+```
+Sets the exact coordinates the sound should originate from.
+
+**Example**
+```java
+import com.observer.paper.api.PaperObserverSoundAPI;
+import com.observer.api.sound.SoundDefinition;
+
+Location loc = player.getLocation();
+
+// Create the definition
+SoundDefinition sound = SoundDefinition.builder("observer:creepy_ambience")
+    .position(loc.getX(), loc.getY(), loc.getZ())
+    .build();
+
+// Play it
+PaperObserverSoundAPI.playSpatialSound(player, sound);
+
+// Stop it later
+PaperObserverSoundAPI.stopSound(player, "observer:creepy_ambience");
+```

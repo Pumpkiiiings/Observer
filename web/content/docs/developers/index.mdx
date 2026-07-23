@@ -1,0 +1,132 @@
+---
+title: Developer Overview
+description: Quick start guide and overview for developing plugins with Observer.
+---
+
+# Developer Overview
+
+Observer provides a public API module (`observer-api`) that allows other plugins to trigger and control client-side effects on players running the Observer client mod. Effects include camera manipulation, screen effects, HUD rendering, custom sounds, environmental overrides, and more.
+
+## Maven / Gradle
+
+Currently, `Observer-API` is not hosted on a public Maven repository like JitPack. To depend on it, you must place the compiled Observer jar file into your plugin's `libs/` folder and include it as a `compileOnly` dependency. This ensures Observer is not shaded directly into your plugin's jar.
+
+### Gradle (Kotlin DSL)
+
+```kotlin
+dependencies {
+    compileOnly(files("libs/Observer.jar"))
+}
+```
+
+### Maven
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.observer</groupId>
+        <artifactId>observer-api</artifactId>
+        <version>1.0.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/libs/Observer.jar</systemPath>
+    </dependency>
+</dependencies>
+```
+
+Add Observer as a `depend` or `softdepend` in your `plugin.yml`:
+
+```yaml
+depend:
+  - Observer
+```
+Or, if Observer is optional for your plugin:
+```yaml
+softdepend:
+  - Observer
+```
+
+## Architecture
+
+| Module | Description |
+|---|---|
+| **Observer-API** | Public interfaces and classes. Depend on this module. |
+| **Observer-Paper** | Implementation. Contains commands, network handling, and effect dispatching. Do not depend on this directly. |
+| **Observer-Client-API** | Client-side handling for incoming payloads and rendering. |
+
+## Accessing the API
+
+Most core functionality is accessed statically through the `ObserverAPI` class.
+
+```java
+import com.observer.paper.api.ObserverAPI;
+
+if (!ObserverAPI.isObserverPlayer(player)) {
+    // The player doesn't have the Observer mod installed
+    return;
+}
+```
+
+## Common Operations
+
+### HUD Rendering
+
+```java
+// Display text on the player's HUD
+ObserverAPI.createText(player, "my_title", "<gold>Level Up!</gold>", 
+    ComponentAlignment.TOP_CENTER, 0, 10, 2.0f, TextAlignment.CENTER);
+
+ObserverAPI.removeComponent(player, "my_title");
+```
+
+### Environment Effects
+
+```java
+// Enable true darkness (no ambient light)
+ObserverAPI.setTrueDarkness(player, true);
+
+// Override the sky color to red
+ObserverAPI.setSkyColor(player, 255, 0, 0); 
+ObserverAPI.resetSkyColor(player);
+```
+
+### Audio
+
+```java
+// Play a custom 2D sound effect
+ObserverAPI.playSound(player, "observer:scary_noise", 1.0f, 1.0f);
+```
+
+### Screen Effects
+
+```java
+import com.observer.paper.api.PaperObserverScreenAPI;
+
+// Apply a red vignette for 100 ticks
+PaperObserverScreenAPI.playScreenVignette(player, 255, 0, 0, 0.8f, 100);
+
+// Shake the screen
+PaperObserverScreenAPI.playScreenshake(player, 1.0f, 20);
+```
+
+## Listening for Events
+
+Observer dispatches Bukkit events when the client sends data to the server or when internal state changes occur:
+
+```java
+@EventHandler
+public void onKeybindPressed(PlayerKeyPressEvent event) {
+    Player player = event.getPlayer();
+    int asciiKey = event.getAsciiKey();
+    // Handle physical key press
+}
+
+@EventHandler
+public void onPlayerJump(ObserverPlayerJumpEvent event) {
+    Player player = event.getPlayer();
+    // Handle when the client initiates a jump
+}
+```
+
+## Related Pages
+- **API Reference** — Full interface documentation and event list
+- **API (Specifics)** — Deep dive into each feature under the API sidebar folder

@@ -1,0 +1,154 @@
+---
+title: Teclado
+description: Aprende a rastrear y reaccionar a las pulsaciones físicas del teclado de un jugador.
+---
+
+# Teclado
+
+Observer te permite rastrear y reaccionar a las pulsaciones físicas del teclado de un jugador. Puedes detectar cuándo un jugador presiona o suelta una tecla específica, o consultar el estado de su teclado dinámicamente.
+
+## Eventos
+
+Observer dispara varios eventos cuando el cliente interactúa con su teclado.
+
+---
+
+### `PlayerKeyPressEvent`
+> Se dispara cuando un jugador presiona físicamente una tecla.
+
+`com.observer.paper.api.events.PlayerKeyPressEvent`
+
+**Firma**
+```java
+public class PlayerKeyPressEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `getAsciiKey`
+```java
+public int getAsciiKey()
+```
+Retorna: El código ASCII de la tecla.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onKeyPress(PlayerKeyPressEvent event) {
+    if (event.getAsciiKey() == 87) { // Tecla 'W'
+        event.getPlayer().sendMessage("¡Presionaste W!");
+    }
+}
+```
+
+---
+
+### `PlayerKeyReleaseEvent`
+> Se dispara cuando un jugador suelta una tecla física.
+
+`com.observer.paper.api.events.PlayerKeyReleaseEvent`
+
+**Firma**
+```java
+public class PlayerKeyReleaseEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `getAsciiKey`
+```java
+public int getAsciiKey()
+```
+Retorna: El código ASCII de la tecla.
+
+---
+
+### `PlayerKeyMatchEvent`
+> Se dispara cuando se presiona correctamente una combinación definida en el servidor (`KeyAction`).
+
+`com.observer.paper.api.events.PlayerKeyMatchEvent`
+
+**Firma**
+```java
+public class PlayerKeyMatchEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `getAction`
+```java
+public KeyAction getAction()
+```
+Retorna: La acción (`KeyAction`) que fue detectada con éxito.
+
+---
+
+## Consultar Estado de Teclas en Tiempo Real
+
+En lugar de escuchar eventos, puedes consultar de forma activa qué teclas están siendo presionadas usando `PaperObserverKeyboardAPI`.
+
+---
+
+### `PaperObserverKeyboardAPI`
+> Consultas de teclado en tiempo real sin necesitar eventos.
+
+`com.observer.paper.api.PaperObserverKeyboardAPI`
+
+**Firma**
+```java
+public class PaperObserverKeyboardAPI
+```
+
+**Métodos**
+
+#### `isKeyDown`
+```java
+public static boolean isKeyDown(Player player, int asciiKey)
+```
+Retorna `true` si la tecla ASCII está presionada en este momento.
+
+#### `getPressedKeys`
+```java
+public static Set<Integer> getPressedKeys(Player player)
+```
+Retorna todas las teclas (códigos ASCII) actualmente presionadas.
+
+#### `flushKeys`
+```java
+public static void flushKeys(Player player)
+```
+Olvida de la memoria del servidor todas las teclas presionadas por el jugador.
+
+**Ejemplo**
+```java
+import com.observer.paper.api.PaperObserverKeyboardAPI;
+
+// Comprobar si una tecla está presionada en este instante
+if (PaperObserverKeyboardAPI.isKeyDown(player, 32)) {
+    // El jugador mantiene presionado el Espacio
+}
+
+// Obtener todas las teclas presionadas simultáneamente
+Set<Integer> teclas = PaperObserverKeyboardAPI.getPressedKeys(player);
+
+// Forzar la liberación virtual de todas las teclas para un jugador
+PaperObserverKeyboardAPI.flushKeys(player);
+```

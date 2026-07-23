@@ -1,0 +1,36 @@
+---
+title: Welcome Owners
+description: Learn how to configure and run Observer on your server.
+---
+
+# Observer for Server Owners
+
+Welcome to the Observer documentation for server owners. 
+
+Observer is a Server-Side Paper plugin paired with a Client-Side Fabric mod. It allows server administrators and developers to have direct control over client-side visual effects, HUD rendering, spatial audio, and keyboard inputs, bypassing standard Minecraft limitations.
+
+## Requirements
+
+- **Server**: Paper 1.21+ (Java 21)
+- **Client**: Fabric 1.21+ (Java 21)
+
+
+## Features
+
+- **Screen & HUD Control** — Create dynamic titles, render 3D items on the screen, shake the camera, or apply full-screen colored tints and vignettes.
+- **Environment Overrides** — Dynamically change sky color, fog color, and fog distance on a per-player basis. Enable "True Darkness" to disable ambient lighting.
+- **Audio Engine** — Play custom sounds globally or perfectly positioned 3D spatial audio (requires MONO `.ogg` files).
+- **Keyboard Tracking** — Real-time tracking of what physical keys your players are pressing or holding down.
+- **Cutscene Ready** — The perfect toolset to combine effects and build immersive cinematic intros and events.
+
+## Installation
+
+1. Place the `observer-paper-<version>.jar` into your server's `plugins/` directory.
+2. Start the server once to generate the default configuration files.
+3. Distribute the `observer-fabric-<version>.jar` to your players (via your Discord, website, or a Modrinth modpack).
+
+## Important Considerations
+
+- **Strict Requirement**: Players *without* the client mod can still join your server (unless you use a separate whitelist plugin), but Observer features will silently fail for them.
+- **Resource Packs**: Observer relies on standard server resource packs. If you are rendering custom UI textures or playing custom sounds, ensure players download your server resource pack.
+- **Performance**: The network payload system is highly optimized. HUD updates only send the delta data, keeping bandwidth usage low and TPS stable.

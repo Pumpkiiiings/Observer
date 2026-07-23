@@ -1,0 +1,36 @@
+---
+title: Commands
+description: Full command and permission listing for Observer.
+---
+
+# Commands
+
+Observer registers the `/observer` top-level command on the server. Most commands are built specifically for debugging and testing APIs in-game without writing a plugin.
+
+All commands require Server Operator (`OP`) permissions.
+
+## General Commands
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `reload` | `/observer reload` | Reloads the `config.yml` from disk. |
+| `debug` | `/observer debug` | Prints server-side statistics (versions, loaded layouts, connected observer clients, and audio engine metrics). |
+| `resources reload` | `/observer resources reload` | Forces all connected Observer clients to reload their Resource Packs instantly. |
+| `parse <text>` | `/observer parse <text>` | Takes MiniMessage text and prints out how it is sanitized, parsed, and converted to the raw JSON payload sent to clients. |
+| `debug colors <text>` | `/observer debug colors <text>` | Similar to parse, but explicitly prints the vanilla Chat Component JSON for cross-referencing. |
+| `itemtest` | `/observer itemtest` | Spawns a dummy `minecraft:diamond_sword` 3D item component in the center of your screen to verify HUD functionality. |
+| `envtest` | `/observer envtest` | Dispatches a full Environment Sequence (Sky Color, Fog Color, Moon Color, True Darkness, and Dense Fog) to test network stages. |
+
+---
+
+## Keyboard Debugging Commands
+
+Observer includes a powerful suite of keyboard tracking commands to help you debug what keys players are holding.
+
+| Subcommand | Usage | Description |
+|---|---|---|
+| `key stats` | `/observer key stats` | Displays global keyboard stats: total packets received, last update ping, and lists all players with active held keys. |
+| `key debug <player>` | `/observer key debug <player>` | Prints the exact ASCII codes of all keys currently held down by the target player. |
+| `key flush <player>` | `/observer key flush <player>` | Forces the server to clear the target player's keyboard state. |
+| `key iskeydown <player> <ascii>` | `/observer key iskeydown <player> <ascii>` | Checks if a player is holding a specific ASCII key and prints the result. |
+| `key matchgroup <player> <group>` | `/observer key matchgroup <player> <group>` | Checks if a player's currently held keys perfectly match a comma-separated list of ASCII codes. |

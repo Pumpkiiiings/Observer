@@ -1,0 +1,93 @@
+---
+title: Best Practices
+description: Guidelines and best practices for developing with Observer.
+---
+
+# Best Practices
+
+When integrating your plugin with Observer, following these guidelines will ensure a smooth, performant, and bug-free experience for your players. Since Observer operates heavily on the client-side, network optimization and asset management are critical.
+
+## 1. Always Verify the Player
+
+Never assume a player has the Observer mod installed. Vanilla players cannot process custom payloads, and sending them might result in silent failures or console warnings.
+
+**Always wrap your logic:**
+```java
+if (ObserverAPI.isObserverPlayer(player)) {
+    // Safe to send HUDs, play spatial sounds, etc.
+}
+```
+
+## 2. Component ID Naming Conventions
+
+The HUD is shared across all plugins on the server that use Observer. To prevent your HUD elements from accidentally overwriting another plugin's elements, **always prefix your component IDs with your plugin name**.
+
+**❌ Bad:**
+```java
+ObserverAPI.createText(player, "health_bar", ...);
+```
+
+**✅ Good:**
+```java
+ObserverAPI.createText(player, "myrpgplugin:health_bar", ...);
+```
+
+## 3. Network Optimization (Don't spam updates)
+
+Updating text or HUD elements every single tick (20 times a second) uses network bandwidth. Only send updates when the underlying data actually changes.
+
+**❌ Bad:**
+```java
+// Inside a BukkitRunnable running every 1 tick
+ObserverAPI.updateText(player, "myrpg:mana", "Mana: " + player.getMana());
+```
+
+**✅ Good:**
+```java
+// Only send the packet if the mana value has actually changed since the last tick
+if (currentMana != lastMana) {
+    ObserverAPI.updateText(player, "myrpg:mana", "Mana: " + currentMana);
+    lastMana = currentMana;
+}
+```
+
+## 4. Server Resource Packs
+
+Observer relies heavily on custom assets (textures for HUDs, `.ogg` files for spatial sounds, models for animations). You should **always bundle your assets into a Server Resource Pack** and force players to download it on join.
+
+If a player does not have the resource pack loaded:
+- Missing textures will appear as the classic purple/black block.
+- Custom sounds simply won't play.
+- Animations will fail to apply.
+
+## 5. Handshake Delays on Join
+
+When a player joins the server (`PlayerJoinEvent`), they might not have completed the Observer Handshake instantly. The client needs a moment to initialize and respond.
+
+If you want to draw a HUD immediately when a player logs in, **wait at least 10-20 ticks** before checking `isObserverPlayer` and sending the components.
+
+```java
+@EventHandler
+public void onJoin(PlayerJoinEvent event) {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        if (ObserverAPI.isObserverPlayer(event.getPlayer())) {
+            // Draw the default HUD
+        }
+    }, 20L); // Wait 1 second
+}
+```
+
+## 6. Cleanup on Disconnect or Death
+
+Observer's client-side components persist on the screen until they are explicitly removed. However, if a player disconnects, their client unloads the HUD naturally. 
+
+You **do not** need to manually clear the HUD on `PlayerQuitEvent`. However, you **should** consider clearing or hiding certain elements during a `PlayerDeathEvent` if you don't want them visible on the respawn screen.
+
+```java
+@EventHandler
+public void onDeath(PlayerDeathEvent event) {
+    if (ObserverAPI.isObserverPlayer(event.getEntity())) {
+        ObserverAPI.clearHUD(event.getEntity());
+    }
+}
+```
