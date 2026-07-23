@@ -23,10 +23,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *   - Iris shaders (disabled): override works.
  *   - Sodium: does NOT affect ClientLevel.getSkyColor() — override works.
  */
-@Mixin(ClientLevel.class)
+// @Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin {
 
-    @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true, require = 0)
+    // @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true, require = 0)
     private void onGetSkyColor(CallbackInfoReturnable<Integer> cir) {
         if (EnvironmentState.hasSkyOverride) {
             int r = EnvironmentState.skyR & 0xFF;
