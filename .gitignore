@@ -60,3 +60,5 @@ gradle/wrapper/
 .vscode/
 /docs/
 analysis/
+
+core/misc/
