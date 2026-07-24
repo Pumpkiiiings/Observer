@@ -82,6 +82,24 @@ PaperObserverSoundAPI.playSound(player, "minecraft:music_disc.pigstep", 1.0f, 1.
 PaperObserverSoundAPI.stopSound(player, "minecraft:music_disc.pigstep");
 ```
 
+### 5. Player Actions & Animations API
+Detect when a player walks, runs, jumps, or clicks natively from the client, and instantly play custom Blockbench animations without lag.
+```java
+@EventHandler
+public void onPlayerWalk(ObserverPlayerWalkEvent event) {
+    if (event.isWalking()) {
+        PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "walk_animation");
+    } else {
+        PaperObserverAnimationAPI.stopAnimation(event.getPlayer());
+    }
+}
+
+@EventHandler
+public void onPlayerLeftClick(ObserverPlayerLeftClickEvent event) {
+    PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "attack_animation");
+}
+```
+
 ---
 
 ## 📥 Installation
