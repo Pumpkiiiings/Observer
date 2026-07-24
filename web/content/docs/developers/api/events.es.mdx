@@ -207,3 +207,40 @@ public void onRightClick(ObserverPlayerRightClickEvent event) {
 }
 ```
 
+---
+
+### `ObserverPlayerIdleEvent`
+> Se dispara cuando un jugador se queda inactivo o se vuelve a mover.
+
+`com.observer.paper.api.events.ObserverPlayerIdleEvent`
+
+**Firma**
+```java
+public class ObserverPlayerIdleEvent extends Event
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `isIdle`
+```java
+public boolean isIdle()
+```
+Retorna: `true` si el jugador entró en inactividad, `false` si volvió a moverse.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onIdle(ObserverPlayerIdleEvent event) {
+    if (event.isIdle()) {
+        event.getPlayer().sendMessage("¡Estás inactivo!");
+    } else {
+        event.getPlayer().sendMessage("¡Te moviste!");
+    }
+}
+```

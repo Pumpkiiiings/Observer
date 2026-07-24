@@ -76,10 +76,11 @@ public class AnimationListener implements Listener {
     @EventHandler
     public void onIdle(ObserverPlayerIdleEvent event) {
         if (event.isIdle()) {
-            event.getPlayer().sendMessage("¡Has entrado en estado inactivo!");
-            // El plugin base reproducirá la animación configurada automáticamente.
+            // Reproducir una animación personalizada (ej: estirar los brazos) cuando esté inactivo
+            PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "estiramiento");
         } else {
-            event.getPlayer().sendMessage("¡Te has vuelto a mover!");
+            // Detener la animación si vuelve a moverse
+            PaperObserverAnimationAPI.stopAnimation(event.getPlayer());
         }
     }
 }
