@@ -9,6 +9,7 @@ commands:
   animation:
     play: "<prefix><green>Playing animation <white><animation></white> on <white><player></white>"
     stop: "<prefix><green>Stopping animation on <white><player></white>"
+    not_found: "<prefix><red>Animation <white><animation></white> not found."
   env:
     test_dispatched: "<prefix><green>Dispatched environment test sequence."
     updated: "<prefix><green>Environment updated for <white><count></white> players."
