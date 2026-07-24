@@ -72,5 +72,29 @@ public class AnimationListener implements Listener {
     public void onLeftClick(ObserverPlayerLeftClickEvent event) {
         PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "sword_slash");
     }
+
+    @EventHandler
+    public void onIdle(ObserverPlayerIdleEvent event) {
+        if (event.isIdle()) {
+            event.getPlayer().sendMessage("¡Has entrado en estado inactivo!");
+            // El plugin base reproducirá la animación configurada automáticamente.
+        } else {
+            event.getPlayer().sendMessage("¡Te has vuelto a mover!");
+        }
+    }
 }
 ```
+
+### Configuración Automática (Idle)
+
+Observer incluye un sistema integrado para reproducir animaciones automáticamente cuando el jugador está inactivo (Idle). Esto se configura en `plugins/Observer/config.yml`.
+
+```yaml
+animations:
+  idle:
+    enabled: true
+    animation-name: "idle" # El nombre de tu animación en Blockbench
+    threshold-ms: 1000     # Tiempo en milisegundos que el jugador debe estar quieto
+```
+
+Cuando un jugador se detiene durante el tiempo especificado (`threshold-ms`), el plugin dispara automáticamente la animación definida. Cuando el jugador vuelve a moverse, el plugin envía un paquete para detenerla.

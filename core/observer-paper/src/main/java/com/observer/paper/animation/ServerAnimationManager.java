@@ -9,12 +9,14 @@ import java.util.Map;
 public class ServerAnimationManager {
     private final ObserverPaper plugin;
     private final Map<String, String> loadedAnimations = new HashMap<>();
+    private IdleDetector idleDetector;
 
     public ServerAnimationManager(ObserverPaper plugin) {
         this.plugin = plugin;
     }
 
     public void initialize() {
+        this.idleDetector = new IdleDetector(plugin);
         reload();
     }
 

@@ -31,3 +31,10 @@ updater:
     # Sound settings for MESSAGE action
     play-sound: true
     sound-name: "entity.experience_orb.pickup"
+
+animations:
+  idle:
+    enabled: true
+    animation-name: "idle"
+    threshold-ms: 1000
+
