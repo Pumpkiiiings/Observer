@@ -13,7 +13,8 @@
     "GuiMixin",
     "CameraMixin",
     "EntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -247,6 +247,14 @@ public class ObserverNetworkManager implements PluginMessageListener {
                             com.observer.paper.api.events.ObserverPlayerSneakEvent event = new com.observer.paper.api.events.ObserverPlayerSneakEvent(player, false);
                             Bukkit.getPluginManager().callEvent(event);
                         }
+                        case LEFT_CLICK -> {
+                            com.observer.paper.api.events.ObserverPlayerLeftClickEvent event = new com.observer.paper.api.events.ObserverPlayerLeftClickEvent(player);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
+                        case RIGHT_CLICK -> {
+                            com.observer.paper.api.events.ObserverPlayerRightClickEvent event = new com.observer.paper.api.events.ObserverPlayerRightClickEvent(player);
+                            Bukkit.getPluginManager().callEvent(event);
+                        }
                     }
                 });
             } catch (Exception e) {

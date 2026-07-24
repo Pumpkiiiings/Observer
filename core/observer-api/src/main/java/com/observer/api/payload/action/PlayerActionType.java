@@ -5,5 +5,7 @@ public enum PlayerActionType {
     START_SPRINTING,
     STOP_SPRINTING,
     START_SNEAKING,
-    STOP_SNEAKING
+    STOP_SNEAKING,
+    LEFT_CLICK,
+    RIGHT_CLICK
 }
