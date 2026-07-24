@@ -15,7 +15,7 @@ public class ReloadCommand {
             .requires(source -> source.getSender().hasPermission("observer.command.reload"))
             .executes(ctx -> {
                 ObserverPaper.getInstance().reload();
-                ctx.getSource().getSender().sendMessage(Component.text("Observer has been reloaded.", NamedTextColor.GREEN));
+                com.observer.paper.config.MessageManager.sendMessage(ctx.getSource().getSender(), "general.reload_success");
                 return 1;
             });
     }
