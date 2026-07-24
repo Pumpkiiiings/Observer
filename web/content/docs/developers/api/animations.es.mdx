@@ -53,5 +53,24 @@ public class AnimationListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onWalk(ObserverPlayerWalkEvent event) {
+        if (event.isWalking()) {
+            PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "custom_walk");
+        } else {
+            PaperObserverAnimationAPI.stopAnimation(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onJump(ObserverPlayerJumpEvent event) {
+        PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "backflip");
+    }
+
+    @EventHandler
+    public void onLeftClick(ObserverPlayerLeftClickEvent event) {
+        PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "sword_slash");
+    }
 }
 ```
