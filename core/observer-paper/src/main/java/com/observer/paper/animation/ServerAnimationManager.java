@@ -41,8 +41,16 @@ public class ServerAnimationManager {
                 e.printStackTrace();
             }
         }
-        
         plugin.getLogger().info("Loaded " + loadedAnimations.size() + " server-side animations.");
+
+        if (plugin.getNetworkManager() != null && plugin.getPlayerManager() != null) {
+            com.observer.api.payload.action.SyncAnimationsPayload syncPayload = new com.observer.api.payload.action.SyncAnimationsPayload(loadedAnimations);
+            for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
+                if (plugin.getPlayerManager().isObserver(p)) {
+                    plugin.getNetworkManager().sendPayload(p, com.observer.api.ObserverChannels.channel(com.observer.api.ObserverChannels.SYNC_ANIMATIONS), syncPayload, com.observer.api.payload.action.SyncAnimationsPayload.CODEC);
+                }
+            }
+        }
     }
 
     public Map<String, String> getAnimations() {
