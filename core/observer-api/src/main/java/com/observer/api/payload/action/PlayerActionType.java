@@ -7,5 +7,7 @@ public enum PlayerActionType {
     START_SNEAKING,
     STOP_SNEAKING,
     LEFT_CLICK,
-    RIGHT_CLICK
+    RIGHT_CLICK,
+    START_WALKING,
+    STOP_WALKING
 }

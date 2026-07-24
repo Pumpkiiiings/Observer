@@ -14,7 +14,8 @@
     "CameraMixin",
     "EntityMixin",
     "LivingEntityMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
