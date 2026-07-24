@@ -17,4 +17,15 @@ public class PaperObserverAnimationAPI {
         ObserverPaper plugin = JavaPlugin.getPlugin(ObserverPaper.class);
         plugin.getNetworkManager().broadcastAnimation(targetPlayer, animationName);
     }
+
+    /**
+     * Broadcasts a stop animation signal to all nearby players.
+     * The animation will be stopped on the target player's model.
+     *
+     * @param targetPlayer The player that will stop the animation.
+     */
+    public static void stopAnimation(Player targetPlayer) {
+        ObserverPaper plugin = JavaPlugin.getPlugin(ObserverPaper.class);
+        plugin.getNetworkManager().broadcastAnimation(targetPlayer, "stop");
+    }
 }

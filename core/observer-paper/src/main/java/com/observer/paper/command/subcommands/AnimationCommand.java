@@ -24,6 +24,25 @@ public class AnimationCommand {
                         })
                     )
                 )
+            )
+            .then(Commands.literal("stop")
+                .then(Commands.argument("player", ArgumentTypes.player())
+                    .executes(ctx -> {
+                        Player target = ctx.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource()).get(0);
+                        com.observer.paper.api.PaperObserverAnimationAPI.stopAnimation(target);
+                        com.observer.paper.config.MessageManager.sendMessage(ctx.getSource().getSender(), "commands.animation.stop", "player", target.getName());
+                        return 1;
+                    })
+                    .then(Commands.argument("animation", StringArgumentType.string())
+                        .executes(ctx -> {
+                            Player target = ctx.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource()).get(0);
+                            String anim = StringArgumentType.getString(ctx, "animation");
+                            com.observer.paper.api.PaperObserverAnimationAPI.stopAnimation(target);
+                            com.observer.paper.config.MessageManager.sendMessage(ctx.getSource().getSender(), "commands.animation.stop", "player", target.getName());
+                            return 1;
+                        })
+                    )
+                )
             );
     }
 }

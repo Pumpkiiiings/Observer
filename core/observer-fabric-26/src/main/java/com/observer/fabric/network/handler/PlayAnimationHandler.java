@@ -14,7 +14,11 @@ public class PlayAnimationHandler {
             
             Player targetPlayer = mc.level.getPlayerByUUID(payload.targetPlayer());
             if (targetPlayer != null) {
-                ObserverAnimationManager.playAnimation(targetPlayer, payload.animationName());
+                if (payload.animationName().isEmpty() || payload.animationName().equals("stop")) {
+                    ObserverAnimationManager.stopAnimation(targetPlayer);
+                } else {
+                    ObserverAnimationManager.playAnimation(targetPlayer, payload.animationName());
+                }
             }
         });
     }

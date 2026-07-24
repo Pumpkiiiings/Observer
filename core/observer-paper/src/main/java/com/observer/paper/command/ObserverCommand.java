@@ -15,6 +15,7 @@ public class ObserverCommand {
             .then(EnvCommand.build())
             .then(KeyCommand.build())
             .then(SystemCommand.build())
-            .then(HelpCommand.build());
+            .then(HelpCommand.build())
+            .then(ReloadCommand.build());
     }
 }

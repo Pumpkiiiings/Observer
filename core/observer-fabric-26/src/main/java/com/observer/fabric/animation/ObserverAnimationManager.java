@@ -92,4 +92,19 @@ public class ObserverAnimationManager {
             e.printStackTrace();
         }
     }
+
+    public static void stopAnimation(Player player) {
+        if (!(player instanceof AbstractClientPlayer)) return;
+        
+        try {
+            PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(
+                    (AbstractClientPlayer) player, ANIMATION_LAYER_ID);
+            
+            if (controller != null) {
+                controller.stop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
