@@ -43,6 +43,7 @@ dependencies {
         }
     }
     include("com.zigythebird.playeranim:PlayerAnimationLibFabric:1.2.5+mc.26.1")
+    include("com.zigythebird.playeranim:PlayerAnimationLibCore:1.2.5+mc.26.1")
 
     implementation(project(":observer-api"))
     include(project(":observer-api"))
