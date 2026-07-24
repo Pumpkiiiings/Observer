@@ -111,3 +111,98 @@ public void onSneak(ObserverPlayerSneakEvent event) {
     }
 }
 ```
+
+---
+
+### `ObserverPlayerWalkEvent`
+> Fired when the player changes their walking (movement) state.
+
+`com.observer.paper.api.events.ObserverPlayerWalkEvent`
+
+**Signature**
+```java
+public class ObserverPlayerWalkEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player whose walk state changed.
+
+#### `isWalking`
+```java
+public boolean isWalking()
+```
+Returns: `true` if they started walking/moving, `false` if they stopped.
+
+**Example**
+```java
+@EventHandler
+public void onWalk(ObserverPlayerWalkEvent event) {
+    if (event.isWalking()) {
+        event.getPlayer().sendMessage("You started walking!");
+    } else {
+        event.getPlayer().sendMessage("You stopped walking.");
+    }
+}
+```
+
+---
+
+### `ObserverPlayerLeftClickEvent`
+> Fired when the client performs a left-click (attack).
+
+`com.observer.paper.api.events.ObserverPlayerLeftClickEvent`
+
+**Signature**
+```java
+public class ObserverPlayerLeftClickEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who attacked or left-clicked.
+
+**Example**
+```java
+@EventHandler
+public void onLeftClick(ObserverPlayerLeftClickEvent event) {
+    // Trigger punch animation
+    PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "punch_animation");
+}
+```
+
+---
+
+### `ObserverPlayerRightClickEvent`
+> Fired when the client performs a right-click (use item).
+
+`com.observer.paper.api.events.ObserverPlayerRightClickEvent`
+
+**Signature**
+```java
+public class ObserverPlayerRightClickEvent extends ObserverPlayerEvent
+```
+
+**Methods**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Returns: The player who used an item or right-clicked.
+
+**Example**
+```java
+@EventHandler
+public void onRightClick(ObserverPlayerRightClickEvent event) {
+    event.getPlayer().sendMessage("You right-clicked!");
+}
+```

@@ -111,3 +111,99 @@ public void onSneak(ObserverPlayerSneakEvent event) {
     }
 }
 ```
+
+---
+
+### `ObserverPlayerWalkEvent`
+> Se dispara cuando cambia el estado de caminar (movimiento) de un jugador.
+
+`com.observer.paper.api.events.ObserverPlayerWalkEvent`
+
+**Firma**
+```java
+public class ObserverPlayerWalkEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador.
+
+#### `isWalking`
+```java
+public boolean isWalking()
+```
+Retorna: `true` si comenzó a caminar o moverse, `false` si se detuvo.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onWalk(ObserverPlayerWalkEvent event) {
+    if (event.isWalking()) {
+        event.getPlayer().sendMessage("¡Empezaste a caminar!");
+    } else {
+        event.getPlayer().sendMessage("Te detuviste.");
+    }
+}
+```
+
+---
+
+### `ObserverPlayerLeftClickEvent`
+> Se dispara cuando el cliente hace click izquierdo (atacar).
+
+`com.observer.paper.api.events.ObserverPlayerLeftClickEvent`
+
+**Firma**
+```java
+public class ObserverPlayerLeftClickEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador que atacó o hizo click izquierdo.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onLeftClick(ObserverPlayerLeftClickEvent event) {
+    // Reproducir animación de golpe
+    PaperObserverAnimationAPI.playAnimation(event.getPlayer(), "animacion_ataque");
+}
+```
+
+---
+
+### `ObserverPlayerRightClickEvent`
+> Se dispara cuando el cliente hace click derecho (usar objeto).
+
+`com.observer.paper.api.events.ObserverPlayerRightClickEvent`
+
+**Firma**
+```java
+public class ObserverPlayerRightClickEvent extends ObserverPlayerEvent
+```
+
+**Métodos**
+
+#### `getPlayer`
+```java
+public Player getPlayer()
+```
+Retorna: El jugador que hizo click derecho.
+
+**Ejemplo**
+```java
+@EventHandler
+public void onRightClick(ObserverPlayerRightClickEvent event) {
+    event.getPlayer().sendMessage("¡Hiciste click derecho!");
+}
+```
+
